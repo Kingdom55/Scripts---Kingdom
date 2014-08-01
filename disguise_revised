@@ -1,0 +1,147 @@
+// DISGUISE ROOM - ALLOW PLAYERS TO DISGUISE AS MONSTERS IN CONTROLLED ENVIRONMENT
+//
+// Version - Edits
+// 1.0: Monster Disguiser & Size Changer - Zairik
+// 1.1: Customs Viewer - Rythwin & Zairik
+// 1.2: Redesigned Customs Viewer - Kingdom
+
+force_1-3	mapflag	nosave	SavePoint
+force_1-3	mapflag	nomemo
+force_1-3	mapflag	nobranch
+force_1-3	mapflag	noteleport
+force_1-3	mapflag	nowarp
+force_1-3	mapflag	nowarpto
+force_1-3	mapflag	noitemconsumption
+force_1-3	mapflag	nodrop
+force_1-3	mapflag	nocommand	99
+force_1-3	mapflag	restricted
+force_1-3	mapflag	noskill
+
+
+prontera,140,170,3	script	Disguise Room#disguise	464,{
+	mes "[^FF0000Disguise Master^000000]";
+	mes	"Do you want to visit the Disguise Room?";
+		if (select("Yes:No") == 2) {
+		close;
+		}
+	warp "force_1-3",	100,	190;	end;
+}
+
+force_1-3,100,190,6	script	Disguise Master#disguise	505,{
+
+	menu "Custom Viewer",L_Custom,"Disguise",L_Disguise,"Change Size",L_Size,"Exit",L_Exit;
+L_Custom:
+	set @custom_max,1213; // Number of customs
+	set @custom_min_id,27000; // First ID in custom list
+	set @custom_max_id,29292; // Last ID in custom list
+	set @hg_item_id,@custom_min_id;
+	set @custom_count,1;
+	while(1) {
+		set @hg_item_look,getiteminfo(@hg_item_id,11);
+		atcommand "@changelook "+@hg_item_look;
+		message strcharinfo(0),"This is custom #"+@custom_count+": "+getitemname(@hg_item_id)+".";
+		set .@menu$, " ~ Next (^0055FF"+((@custom_count!=@custom_max)?@custom_count+1:1)+"^000000): ~ Previous (^0055FF"+((@custom_count!=1)?@custom_count-1:@custom_max)+"^000000): ~ Jump to...:";
+		set .@menu2$, "1:100:200:300:400:500:600:700:800:900:1000:1100:1200";
+		switch(select(.@menu$)) {
+			case 1: set @custom_count, ((@custom_count!=@custom_max)?@custom_count+1:1);
+					set @hg_item_id, @hg_item_id+1;
+					if (@hg_item_id > @custom_max_id) set @hg_item_id,@custom_min_id;
+					while ((getiteminfo(@hg_item_id,11)) == -1) set @hg_item_id, @hg_item_id+1;
+					break;
+			case 2: set @custom_count, ((@custom_count!=1)?@custom_count-1:@custom_max);
+					set @hg_item_id, @hg_item_id-1;
+					if (@hg_item_id < @custom_min_id) set @hg_item_id,@custom_max_id;
+					while ((getiteminfo(@hg_item_id,11)) == -1) set @hg_item_id, @hg_item_id-1;
+					break;
+			case 3: message strcharinfo(0),"Choose a starting ID:"; 
+					switch(select(.@menu2$)) {
+						case 1: set @hg_item_id, @custom_min_id; set @custom_count,1; break;
+						case 2: set @hg_item_id, 28179; set @custom_count,100; break; // Custom #100
+						case 3: set @hg_item_id, 28279; set @custom_count,200; break; // Custom #200
+						case 4: set @hg_item_id, 28379; set @custom_count,300; break; // Custom #300
+						case 5: set @hg_item_id, 28479; set @custom_count,400; break; // Custom #400
+						case 6: set @hg_item_id, 28579; set @custom_count,500; break; // Custom #500
+						case 7: set @hg_item_id, 28679; set @custom_count,600; break; // Custom #600
+						case 8: set @hg_item_id, 28779; set @custom_count,700; break; // Custom #700
+						case 9: set @hg_item_id, 28879; set @custom_count,800; break; // Custom #800
+						case 10: set @hg_item_id, 28979; set @custom_count,900; break; // Custom #900
+						case 11: set @hg_item_id, 29079; set @custom_count,1000; break; // Custom #1000
+						case 12: set @hg_item_id, 29179; set @custom_count,1100; break; // Custom #1100
+						case 13: set @hg_item_id, 29279; set @custom_count,1200; break; // Custom #1200
+					}
+				break;
+		}
+	}		
+	end;
+		
+L_Disguise:
+	mes "[^FF0000Disguise Master^000000]";
+	if (@disguised==1) {
+		mes "Do you want to remove your disguise?";
+		if(select("Yes:No")==1) {
+			atcommand "@undisguise";
+			set @disguised,0;
+		}
+	close;
+	}
+// If not for this else, the script is jumping to this point regardless of @disguised being 1 or 0
+	else;
+	mes "Enter the monster ID.";
+	mes "Examples:";
+	mes "Poring is 1002";
+	mes "Baphomet is 1039";
+	mes "Use @mi to find your favorite!";
+	input .@mob_id;
+	set @mobnum,.@mob_id;
+	if (getmonsterinfo(.@mob_id,MOB_MAXHP) == -1) {
+		mes "Invalid monster ID.";
+	} 
+	else {
+		mes "Disguise as ^0000FF"+getmonsterinfo(.@mob_id,MOB_NAME)+"^000000?";
+		if(select("Yes:No")==1) {
+			set @disguised,1;
+			atcommand "@disguise "+@mobnum;
+			close;
+		}
+	}
+	close;
+	end;	
+		
+L_Size:
+	menu "Giant",L_Giant,"Normal",L_Normal,"Small",L_Small;
+L_Normal:
+	atcommand "@size 0";
+	end;
+L_Small:
+	atcommand "@size 1";
+	end;
+L_Giant:
+	atcommand "@size 2";
+	end;
+L_sizeNO:
+	end;
+L_Exit:
+	mes "[^FF0000Disguise Master^000000]";
+	mes "I will automatically undisguise your character and return you to your normal size.";
+	next;
+	mes "[^FF0000Disguise Master^000000]";
+	mes "Please note that you will have to manually re equip your headgear for it to be seen again!";
+	next;
+	mes "[^FF0000Disguise Master^000000]";
+	mes "Players are ONLY allowed to disguise and change their character size here. Any players found outside this area disguised as a monster will be banned without warning.";
+	next;
+	menu "Return to Normal and Leave",L_YES,"Cancel",L_Exit2;
+L_Exit2:
+	close;		
+L_YES:
+	atcommand "@undisguise";
+	atcommand "@size 0";
+	atcommand "@changelook 1 " + 0;
+	atcommand "@changelook 2 " + 0;
+	atcommand "@changelook 3 " + 0;
+	unequip 1;
+	unequip 9;
+	unequip 10;
+	warp "prontera",	150,	150;
+	end;
+}
