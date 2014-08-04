@@ -1,0 +1,454 @@
+//===== rAthena Script =======================================
+//= Death's Door
+//===== By: ==================================================
+//= Kingdom
+//===== Current Version: =====================================
+//= 2.2
+//===== Compatible With: =====================================
+//= rAthena
+//===== Description: =========================================
+//= A set of 4 portals are created each round with varying odds.
+//= Some of the portals will lead to the next round, others will
+//= send you to your death. Be the last one remaining after a round
+//= or make it to the end to win!
+//===== Revisions =================================
+//= 1.0 First Revision
+//= 2.0 Reformatted for easy changing of odds (# of alive/death portals)
+//= 2.1 Further edits & transfer to custom map "scy_dd"
+//= 2.2 Added Mute System
+//===== Script Notes: ========================================
+//= Designed for ScytheRO (Private RO Server - By Zairik)
+//= Change odds (number of alive/death portals) at "NewRound"
+//= Change OnTime clock to edit start times of event
+//============================================================
+
+-	script	_Death_Door	-1,{
+    OnInit:
+		set $death_door_on,0;
+		set $death_door_open,0;
+	end;
+}
+
+scythero,80,101,3	script	Death's Door#1	651,{
+
+	set $gm_level_dd, 80; // GM level for manual start & immunity to mute
+
+	mes "[^FF0000Death's Door^000000]";
+	mes "What would you like to do?";
+	next;
+	switch(select("Enter:" + ((getgmlevel() >= $gm_level_dd) ? "Autostart Event" : "") + ":Cancel")) {
+	case 1:
+		if ($death_door_open == 0) {
+			mes "[^FF0000Death's Door^000000]";
+			mes "The Event is Currently Inactive";
+			mes "It will start every other hour,";
+			mes "starting with 1:00 servertime";
+			close;
+		}
+		warp "scy_dd",139,31;
+		close;
+	case 2:
+		if ($death_door_open == 0 && $death_door_on == 0) {
+			next;
+			mes "[^FF0000Death's Door^000000]";
+			mes "Are you sure you wish to autostart the event?";
+			switch(select("Yes:No")){
+				case 1:
+					mes "[^FF0000Death's Door^000000]";
+					mes "The event has been started";
+					donpcevent "Death's Door#2::OnStart";
+					close;
+				case 2:
+					break;
+			}
+			break;
+		}	
+		else {
+			mes "[^FF0000Death's Door^000000]";
+			mes "The event is already active";
+			close;
+			}
+	case 3:
+		break;
+	}
+	mes "[^FF0000Death's Door^000000]";
+	mes "Goodbye";
+	close;
+}
+
+scy_dd,133,50,6	script	Death's Door#2	-1,{	
+	
+OnStart:
+// Even Hours
+OnClock0000:
+OnClock0200:
+OnClock0400:
+OnClock0600:
+OnClock0800:
+OnClock1000:
+OnClock1200:
+OnClock1400:
+OnClock1600:
+OnClock1800:
+OnClock2000:
+OnClock2200:
+// Odd Hours
+OnClock0100:
+OnClock0300:
+OnClock0500:
+OnClock0700:
+OnClock0900:
+OnClock1100:
+OnClock1300:
+OnClock1500:
+OnClock1700:
+OnClock1900:
+OnClock2100:
+OnClock2300:
+	set $death_door_open,1;
+	announce "The Death's Door Event Will Begin in 3 Minutes!", bc_all;
+	sleep 180000;
+	announce "The Death's Door Event Will Begin in 1 Minute!", bc_all;
+	sleep 60000;
+	announce "The Death's Door Event Has Begun!", bc_all;
+	set $death_door_open,0; // Event is ongoing - no more people may join
+	set $death_door_on,1;
+	mapannounce "scy_dd","Welcome to the Death's Door event!", bc_map;
+	sleep2 4000;
+	mapannounce "scy_dd","There will be a set of portals created each round.", bc_map;
+	sleep2 4000;
+	mapannounce "scy_dd","Some of the portals will lead to the next round and others will send you to your death!", bc_map;
+	sleep2 4000;
+	mapannounce "scy_dd","You will have a limited amount of time to select a portal.", bc_map;
+	sleep2 4000;
+	mapannounce "scy_dd","The first round will begin in 5 seconds!!!", bc_map;
+	sleep2 5000;
+	set $death_door_on,2; // Event is spawning portals
+		
+	// Round 1 & Initialize
+	set $dd_round,1;
+
+	// Set how many death portals a given round will have
+NewRound:	
+	set .deathportal_1,0; // Reset
+	set .deathportal_2,0; // Reset
+	set .deathportal_3,0; // Reset
+	if ($dd_round <= 2) goto Alive3; // Round 1,2 - 3 Alive, 1 Death
+	if ($dd_round == 3 || $dd_round == 4) goto Alive2; // Round 3,4 - 2 Alive, 2 Death
+	if ($dd_round == 5) goto Alive3; // Round 5 - 3 Alive, 1 Death
+	if ($dd_round == 6) goto Alive2; // Round 6 - 2 Alive, 2 Death
+	if ($dd_round == 7) goto Alive1; // Round 7 - 1 Alive, 3 Death
+	end;
+	
+Alive3:
+	set .@alive_cnt,3;
+	set .@death_cnt,1;
+	set .deathportal_1,rand(1,4);
+	if ($dd_round == 1) goto Round1;
+	if ($dd_round == 2) goto Round2;
+	if ($dd_round == 3) goto Round3;
+	if ($dd_round == 4) goto Round4;
+	if ($dd_round == 5) goto Round5;
+	if ($dd_round == 6) goto Round6;
+	if ($dd_round == 7) goto Round7;
+	end;
+	
+Alive2:
+	set .@alive_cnt,2;
+	set .@death_cnt,2;
+	set .deathportal_1, rand(1,4);
+	set .deathportal_2, rand(1,4);
+	while (.deathportal_1 == .deathportal_2) set .deathportal_2, rand(1,4); // Makes sure there are 2 death portals
+	if ($dd_round == 1) goto Round1;
+	if ($dd_round == 2) goto Round2;
+	if ($dd_round == 3) goto Round3;
+	if ($dd_round == 4) goto Round4;
+	if ($dd_round == 5) goto Round5;
+	if ($dd_round == 6) goto Round6;
+	if ($dd_round == 7) goto Round7;
+	end;
+	
+Alive1:	
+	set .@alive_cnt,1;
+	set .@death_cnt,3;
+	set .deathportal_1, rand(1,4);
+	set .deathportal_2, rand(1,4);
+	set .deathportal_3, rand(1,4);
+	while (.deathportal_2 == .deathportal_1) set .deathportal_2, rand(1,4); // Makes sure there are 2 death portals
+	while (.deathportal_3 == .deathportal_1 || .deathportal_3 == .deathportal_2) set .deathportal_3, rand(1,4); // 3rd death portal
+	if ($dd_round == 1) goto Round1;
+	if ($dd_round == 2) goto Round2;
+	if ($dd_round == 3) goto Round3;
+	if ($dd_round == 4) goto Round4;
+	if ($dd_round == 5) goto Round5;
+	if ($dd_round == 6) goto Round6;
+	if ($dd_round == 7) goto Round7;
+	end;
+	
+Round1:	// Start to Castle
+	sleep2 4000;
+	mapannounce "scy_dd","Round "+ $dd_round +": "+.@alive_cnt+" Alive, "+.@death_cnt+" Death", bc_map;
+	set .portalcount,0;
+	while(.portalcount <2){ // 2 sets of warp portals will be created to allow more time for players
+		if (.deathportal_1 == 1 || .deathportal_2 == 1 || .deathportal_3 == 1) warpportal 133,41,"scy_dd",152,245; 
+		else warpportal 133,41,"scy_dd",243,243; // ALIVE
+		if (.deathportal_1 == 2 || .deathportal_2 == 2 || .deathportal_3 == 2) warpportal 137,41,"scy_dd",152,245; 
+		else warpportal 137,41,"scy_dd",243,243; // ALIVE
+		if (.deathportal_1 == 3 || .deathportal_2 == 3 || .deathportal_3 == 3) warpportal 142,41,"scy_dd",152,245;
+		else warpportal 142,41,"scy_dd",243,243; // ALIVE
+		if (.deathportal_1 == 4 || .deathportal_2 == 4 || .deathportal_3 == 4) warpportal 146,41,"scy_dd",152,245;
+		else warpportal 146,41,"scy_dd",243,243; // ALIVE
+		sleep2 20000;
+		.portalcount ++;
+	}
+	mapannounce "scy_dd",getareausers("scy_dd",234,234,254,254)+ " player(s) still remain", bc_map;
+	set $dd_round,2;
+	if(getareausers("scy_dd",234,234,254,254) <= 1) {areawarp "scy_dd",234,234,254,254,"scy_dd",141,119; goto L_Winner;}
+	goto NewRound;
+	end;
+	
+Round2: // Castle to Niflheim
+	sleep2 4000;
+	mapannounce "scy_dd","Round "+ $dd_round +": "+.@alive_cnt+" Alive, "+.@death_cnt+" Death", bc_map;
+	set .portalcount,0;
+	while(.portalcount <2){ // 2 sets of warp portals will be created to allow more time for players
+		if (.deathportal_1 == 1 || .deathportal_2 == 1 || .deathportal_3 == 1) warpportal 238,249,"scy_dd",152,245; 
+		else warpportal 238,249,"scy_dd",42,133; // ALIVE
+		if (.deathportal_1 == 2 || .deathportal_2 == 2 || .deathportal_3 == 2) warpportal 249,249,"scy_dd",152,245; 
+		else warpportal 249,249,"scy_dd",42,133; // ALIVE
+		if (.deathportal_1 == 3 || .deathportal_2 == 3 || .deathportal_3 == 3) warpportal 249,238,"scy_dd",152,245;
+		else warpportal 249,238,"scy_dd",42,133; // ALIVE
+		if (.deathportal_1 == 4 || .deathportal_2 == 4 || .deathportal_3 == 4) warpportal 238,238,"scy_dd",152,245;
+		else warpportal 238,238,"scy_dd",42,133; // ALIVE
+		sleep2 20000;
+		.portalcount ++;
+	}
+	mapannounce "scy_dd",getareausers("scy_dd",23,127,60,147)+ " player(s) still remain", bc_map;
+	set $dd_round,3;
+	if (getareausers("scy_dd",23,127,60,147) <= 1) {areawarp "scy_dd",23,127,60,147,"scy_dd",141,119; goto L_Winner;}
+	goto NewRound;
+	end;
+	
+Round3: // Niflheim to Ice
+	sleep2 4000;
+	mapannounce "scy_dd","Round "+ $dd_round +": "+.@alive_cnt+" Alive, "+.@death_cnt+" Death", bc_map;
+	set .portalcount,0;
+	while(.portalcount <2){ // 2 sets of warp portals will be created to allow more time for players
+		if (.deathportal_1 == 1 || .deathportal_2 == 1 || .deathportal_3 == 1) warpportal 30,143,"scy_dd",152,245; 
+		else warpportal 30,143,"scy_dd",41,33; // ALIVE
+		if (.deathportal_1 == 2 || .deathportal_2 == 2 || .deathportal_3 == 2) warpportal 38,143,"scy_dd",152,245; 
+		else warpportal 38,143,"scy_dd",41,33; // ALIVE
+		if (.deathportal_1 == 3 || .deathportal_2 == 3 || .deathportal_3 == 3) warpportal 46,143,"scy_dd",152,245;
+		else warpportal 46,143,"scy_dd",41,33; // ALIVE
+		if (.deathportal_1 == 4 || .deathportal_2 == 4 || .deathportal_3 == 4) warpportal 54,143,"scy_dd",152,245;
+		else warpportal 54,143,"scy_dd",41,33; // ALIVE
+		sleep2 20000;
+		.portalcount ++;
+	}
+	mapannounce "scy_dd",getareausers("scy_dd",25,27,58,48)+ " player(s) still remain", bc_map;
+	set $dd_round,4;
+	if (getareausers("scy_dd",25,27,58,48) <= 1) {areawarp "scy_dd",25,27,58,48,"scy_dd",141,119; goto L_Winner;}
+	goto NewRound;
+	end;
+
+Round4: // Ice to Forest
+	sleep2 4000;
+	mapannounce "scy_dd","Round "+ $dd_round +": "+.@alive_cnt+" Alive, "+.@death_cnt+" Death", bc_map;
+	set .portalcount,0;
+	while(.portalcount <2){ // 2 sets of warp portals will be created to allow more time for players
+		if (.deathportal_1 == 1 || .deathportal_2 == 1 || .deathportal_3 == 1) warpportal 30,45,"scy_dd",152,245; 
+		else warpportal 30,45,"scy_dd",238,34; // ALIVE
+		if (.deathportal_1 == 2 || .deathportal_2 == 2 || .deathportal_3 == 2) warpportal 38,45,"scy_dd",152,245; 
+		else warpportal 38,45,"scy_dd",238,34; // ALIVE
+		if (.deathportal_1 == 3 || .deathportal_2 == 3 || .deathportal_3 == 3) warpportal 46,45,"scy_dd",152,245;
+		else warpportal 46,45,"scy_dd",238,34; // ALIVE
+		if (.deathportal_1 == 4 || .deathportal_2 == 4 || .deathportal_3 == 4) warpportal 54,45,"scy_dd",152,245;
+		else warpportal 54,45,"scy_dd",238,34; // ALIVE
+		sleep2 20000;
+		.portalcount ++;
+	}
+	mapannounce "scy_dd",getareausers("scy_dd",223,28,252,48)+ " player(s) still remain", bc_map;
+	set $dd_round,5;
+	if (getareausers("scy_dd",223,28,252,48) <= 1) {areawarp "scy_dd",223,28,252,48,"scy_dd",141,119; goto L_Winner;}
+	goto NewRound;
+	end;
+		
+Round5: // Forest to Beach
+	sleep2 4000;
+	mapannounce "scy_dd","Round "+ $dd_round +": "+.@alive_cnt+" Alive, "+.@death_cnt+" Death", bc_map;
+	set .portalcount,0;
+	while(.portalcount <2){ // 2 sets of warp portals will be created to allow more time for players
+		if (.deathportal_1 == 1 || .deathportal_2 == 1 || .deathportal_3 == 1) warpportal 226,45,"scy_dd",152,245; 
+		else warpportal 226,45,"scy_dd",40,239; // ALIVE
+		if (.deathportal_1 == 2 || .deathportal_2 == 2 || .deathportal_3 == 2) warpportal 234,45,"scy_dd",152,245; 
+		else warpportal 234,45,"scy_dd",40,239; // ALIVE
+		if (.deathportal_1 == 3 || .deathportal_2 == 3 || .deathportal_3 == 3) warpportal 242,45,"scy_dd",152,245;
+		else warpportal 242,45,"scy_dd",40,239; // ALIVE
+		if (.deathportal_1 == 4 || .deathportal_2 == 4 || .deathportal_3 == 4) warpportal 250,45,"scy_dd",152,245;
+		else warpportal 250,45,"scy_dd",40,239; // ALIVE
+		sleep2 20000;
+		.portalcount ++;
+	}
+	mapannounce "scy_dd",getareausers("scy_dd",24,233,56,254)+ " player(s) still remain", bc_map;
+	set $dd_round,6;
+	if (getareausers("scy_dd",24,233,56,254) <= 1) {areawarp "scy_dd",24,233,56,254,"scy_dd",141,119; goto L_Winner;}
+	goto NewRound;
+	end;
+
+Round6: // Beach to The End
+	sleep2 4000;
+	mapannounce "scy_dd","Round "+ $dd_round +": "+.@alive_cnt+" Alive, "+.@death_cnt+" Death", bc_map;
+	set .portalcount,0;
+	while(.portalcount <2){ // 2 sets of warp portals will be created to allow more time for players
+		if (.deathportal_1 == 1 || .deathportal_2 == 1 || .deathportal_3 == 1) warpportal 28,251,"scy_dd",152,245; 
+		else warpportal 28,251,"scy_dd",246,126; // ALIVE
+		if (.deathportal_1 == 2 || .deathportal_2 == 2 || .deathportal_3 == 2) warpportal 36,251,"scy_dd",152,245; 
+		else warpportal 36,251,"scy_dd",246,126; // ALIVE
+		if (.deathportal_1 == 3 || .deathportal_2 == 3 || .deathportal_3 == 3) warpportal 44,251,"scy_dd",152,245;
+		else warpportal 44,251,"scy_dd",246,126; // ALIVE
+		if (.deathportal_1 == 4 || .deathportal_2 == 4 || .deathportal_3 == 4) warpportal 52,251,"scy_dd",152,245;
+		else warpportal 52,251,"scy_dd",246,126; // ALIVE
+		sleep2 20000;
+		.portalcount ++;
+	}
+	mapannounce "scy_dd",getareausers("scy_dd",231,122,260,138)+ " player(s) still remain", bc_map;
+	set $dd_round,7;
+	if (getareausers("scy_dd",231,122,260,138) <= 1) {areawarp "scy_dd",231,122,260,138,"scy_dd",141,119; goto L_Winner;}
+	goto NewRound;
+	end;
+
+Round7: // The End to Winner
+	sleep2 4000;
+	mapannounce "scy_dd","Final Round!!!: "+.@alive_cnt+" Alive, "+.@death_cnt+" Death", bc_map;
+	set .portalcount,0;
+	while(.portalcount <2){ // 2 sets of warp portals will be created to allow more time for players
+		if (.deathportal_1 == 1 || .deathportal_2 == 1 || .deathportal_3 == 1) warpportal 234,134,"scy_dd",152,245; 
+		else warpportal 234,134,"scy_dd",141,119; // ALIVE
+		if (.deathportal_1 == 2 || .deathportal_2 == 2 || .deathportal_3 == 2) warpportal 242,134,"scy_dd",152,245; 
+		else warpportal 242,134,"scy_dd",141,119; // ALIVE
+		if (.deathportal_1 == 3 || .deathportal_2 == 3 || .deathportal_3 == 3) warpportal 250,134,"scy_dd",152,245;
+		else warpportal 250,134,"scy_dd",141,119; // ALIVE
+		if (.deathportal_1 == 4 || .deathportal_2 == 4 || .deathportal_3 == 4) warpportal 258,134,"scy_dd",152,245;
+		else warpportal 258,134,"scy_dd",141,119; // ALIVE
+		sleep2 20000;
+		.portalcount ++;
+	}
+	goto L_Winner;
+	end;
+
+L_Winner:
+	sleep2 1500;
+	mapannounce "scy_dd",getareausers("scy_dd",133,114,150,137)+ " player(s) have survived. Congratulations! ", bc_map;
+	sleep2 2000;
+	mapannounce "scy_dd","Talk to the Guardian Angel to claim your reward!", bc_map;
+	sleep2 50000;
+	mapannounce "scy_dd","All users will be kicked in 15 seconds, please claim your reward!!", bc_map;
+	sleep2 15000;
+	mapwarp "scy_dd","scythero",100,100;
+	set $death_door_on,0;
+	end;
+}		
+
+// === Death Cells (Player killer upon death portal) ===
+
+scy_dd,152,245,6	script	DeathCell	10042,4,4,{
+		end;
+OnTouch:
+	specialeffect 585;
+	specialeffect 635;
+	specialeffect 962;
+	percentheal -100, 0;
+}
+
+// === Reward NPC ===
+scy_dd,141,140,3	script	Guardian Angel#dd	811,{
+
+	getitem 909,1;
+	mes "[^FF0000Death's Door^000000]";
+	mes "Congratulations! You have won the death's door event!";
+	announce "[Death's Door] "+strcharinfo(0)+" has won the event!",0;
+	close2;
+	warp "scythero",100,100;
+	end;
+}
+
+// === Mute System - Prevents players from saying which portal is alive/dead ===
+
+scy_dd,243,243,6	script	MuteSquare#dd1	139,1,1,{ end; // Castle
+OnTouch: if (getgmlevel() < $gm_level_dd) sc_start SC_NOCHAT,1,0,getcharid(0,"strcharinfo(0)");
+}
+scy_dd,42,133,6	script	MuteSquare#dd2	139,1,1,{ end; // Nif
+OnTouch: if (getgmlevel() < $gm_level_dd) sc_start SC_NOCHAT,1,0,getcharid(0,"strcharinfo(0)");
+}
+scy_dd,41,33,6	script	MuteSquare#dd3	139,1,1,{ end; // Ice
+OnTouch: if (getgmlevel() < $gm_level_dd) sc_start SC_NOCHAT,1,0,getcharid(0,"strcharinfo(0)");
+}
+scy_dd,238,34,6	script	MuteSquare#dd4	139,1,1,{ end; // Forest
+OnTouch: if (getgmlevel() < $gm_level_dd) sc_start SC_NOCHAT,1,0,getcharid(0,"strcharinfo(0)");
+}
+scy_dd,40,239,6	script	MuteSquare#dd5	139,1,1,{ end; // Beach
+OnTouch: if (getgmlevel() < $gm_level_dd) sc_start SC_NOCHAT,1,0,getcharid(0,"strcharinfo(0)");
+}
+scy_dd,246,126,6	script	MuteSquare#dd6	139,1,1,{ end; // The End
+OnTouch: if (getgmlevel() < $gm_level_dd) sc_start SC_NOCHAT,1,0,getcharid(0,"strcharinfo(0)");
+}
+scy_dd,141,119,6	script	MuteSquare#dd7	139,1,1,{ end; // Winner
+OnTouch: if (getgmlevel() < $gm_level_dd) sc_start SC_NOCHAT,1,0,getcharid(0,"strcharinfo(0)");
+}
+
+// === User Interface & Visual Announcer Between Rounds (can be disabled)===
+
+function	script	F_Death's Door	{
+
+	if ($death_door_on == 2){ // Event is ongoing
+		mes "[^FF0000Death's Door^000000]";
+		mes "Please wait for the next set of portals.";
+		close;
+		}
+
+	if ($death_door_on == 1){ // Event has started & first round has not begun
+		mes "[^FF0000Death's Door^000000]";
+		mes "Please wait while the rules are explained.";
+		close;
+		}
+// Event is in active grace period
+	mes "[^FF0000Death's Door^000000]";
+	mes "The event will begin shortly.";
+	close;
+}
+
+scy_dd,139,45,6	script	Death's Door::DD_0	651,{ // Dragon (start)
+	callfunc "F_Death's Door";
+}
+scy_dd,244,254,6	script	Death's Door::DD_6	653,{ // Castle
+	callfunc "F_Death's Door";
+}
+scy_dd,42,147,6	script	Death's Door::DD_4	796,{ // Nif
+	callfunc "F_Death's Door";
+}
+scy_dd,42,48,6	script	Death's Door::DD_1	710,{ // Ice
+	callfunc "F_Death's Door";
+}
+scy_dd,238,47,6	script	Death's Door::DD_2	580,{ // Forest
+	callfunc "F_Death's Door";
+}
+scy_dd,40,254,6	script	Death's Door::DD_5	472,{ // Beach
+	callfunc "F_Death's Door";
+}
+scy_dd,246,137,6	script	Death's Door::DD_3	685,{ // The End
+	callfunc "F_Death's Door";
+}
+
+// === Mapflags ===
+scy_dd	mapflag	nocommand	80
+scy_dd	mapflag	nobranch
+scy_dd	mapflag	nodrop
+scy_dd	mapflag	nopenalty
+scy_dd	mapflag	nogo
+scy_dd	mapflag	noskill
+scy_dd	mapflag	nosave
+scy_dd	mapflag	noteleport
+scy_dd	mapflag	novending
+scy_dd	mapflag	nowarp
+scy_dd	mapflag	nowarpto
+scy_dd	mapflag	nomemo
