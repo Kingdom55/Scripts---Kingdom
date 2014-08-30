@@ -18,18 +18,25 @@ force_1-3	mapflag	restricted
 force_1-3	mapflag	noskill
 
 
-prontera,140,170,3	script	Disguise Room#disguise	464,{
+scythero,109,112,3	script	Disguise Room#disguise	464,{
 	mes "[^FF0000Disguise Master^000000]";
 	mes	"Do you want to visit the Disguise Room?";
 		if (select("Yes:No") == 2) {
 		close;
 		}
-	warp "force_1-3",	100,	190;	end;
+	if (getstatus (SC_NOCHAT) == 1) {
+		next;
+		mes "[^FF0000Disguise Master^000000]";
+		mes "You are muted, you cannot enter right now.";
+		end;
+	}
+	warp "force_1-3",100,185;
+	end;
 }
 
 force_1-3,100,190,6	script	Disguise Master#disguise	505,{
 
-	menu "Custom Viewer",L_Custom,"Disguise",L_Disguise,"Change Size",L_Size,"Exit",L_Exit;
+	menu "Custom Viewer",L_Custom,"Sprite Viewer",L_Sprite,"Disguise",L_Disguise,"Change Size",L_Size,"Exit",L_Exit;
 L_Custom:
 	set @custom_max,1213; // Number of customs
 	set @custom_min_id,27000; // First ID in custom list
@@ -39,7 +46,7 @@ L_Custom:
 	while(1) {
 		set @hg_item_look,getiteminfo(@hg_item_id,11);
 		atcommand "@changelook "+@hg_item_look;
-		message strcharinfo(0),"This is custom #"+@custom_count+": "+getitemname(@hg_item_id)+".";
+		message strcharinfo(0),"This is custom #"+@custom_count+": "+getitemname(@hg_item_id)+", ID: "+@hg_item_id+"";
 		set .@menu$, " ~ Next (^0055FF"+((@custom_count!=@custom_max)?@custom_count+1:1)+"^000000): ~ Previous (^0055FF"+((@custom_count!=1)?@custom_count-1:@custom_max)+"^000000): ~ Jump to...:";
 		set .@menu2$, "1:100:200:300:400:500:600:700:800:900:1000:1100:1200";
 		switch(select(.@menu$)) {
@@ -53,7 +60,7 @@ L_Custom:
 					if (@hg_item_id < @custom_min_id) set @hg_item_id,@custom_max_id;
 					while ((getiteminfo(@hg_item_id,11)) == -1) set @hg_item_id, @hg_item_id-1;
 					break;
-			case 3: message strcharinfo(0),"Choose a starting ID:"; 
+			case 3: message strcharinfo(0),"Choose a starting number:"; 
 					switch(select(.@menu2$)) {
 						case 1: set @hg_item_id, @custom_min_id; set @custom_count,1; break;
 						case 2: set @hg_item_id, 28179; set @custom_count,100; break; // Custom #100
@@ -73,7 +80,25 @@ L_Custom:
 		}
 	}		
 	end;
-		
+
+L_Sprite:
+	mes "[^FF0000Disguise Master^000000]";
+	mes "Enter the Headgear ID.";
+	mes "The Custom Headgear IDs Range from 27000-27004 and from 28100-29292!";
+	next;
+	input @raw_hg_id;
+	if (getiteminfo(@raw_hg_id,11) == -1) mes "Invalid Item ID.";
+	else {
+		mes "Do you want to try on "+@raw_hg_id+"?";
+		if(select("Yes:No")==1) {
+			set @revised_hg_id,getiteminfo(@raw_hg_id,11);
+			atcommand "@changelook "+@revised_hg_id;
+			close;
+		}
+	}
+	close;
+	end;
+				
 L_Disguise:
 	mes "[^FF0000Disguise Master^000000]";
 	if (@disguised==1) {
@@ -142,6 +167,6 @@ L_YES:
 	unequip 1;
 	unequip 9;
 	unequip 10;
-	warp "prontera",	150,	150;
+	warp "scythero",100,100;
 	end;
 }
