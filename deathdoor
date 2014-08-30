@@ -3,7 +3,7 @@
 //===== By: ==================================================
 //= Kingdom
 //===== Current Version: =====================================
-//= 2.2
+//= 2.21
 //===== Compatible With: =====================================
 //= rAthena
 //===== Description: =========================================
@@ -16,6 +16,7 @@
 //= 2.0 Reformatted for easy changing of odds (# of alive/death portals)
 //= 2.1 Further edits & transfer to custom map "scy_dd"
 //= 2.2 Added Mute System
+//= 2.21 Added additional checks to prevent GM's (or players that shouldn't) from obtaining prizes.
 //===== Script Notes: ========================================
 //= Designed for ScytheRO (Private RO Server - By Zairik)
 //= Change odds (number of alive/death portals) at "NewRound"
@@ -26,6 +27,7 @@
     OnInit:
 		set $death_door_on,0;
 		set $death_door_open,0;
+		disablenpc "Guardian Angel#dd";
 	end;
 }
 
@@ -41,9 +43,14 @@ scythero,80,101,3	script	Death's Door#1	651,{
 		if ($death_door_open == 0) {
 			mes "[^FF0000Death's Door^000000]";
 			mes "The Event is Currently Inactive";
-			mes "It will start every other hour,";
+			mes "It will start every 4 hours,";
 			mes "starting with 1:00 servertime";
 			close;
+		}
+		if (getcharid(1) != 0 || getcharid(2) != 0) {
+			mes "[^FF0000Death's Door^000000]";
+			mes "You must not be in a party or guild to ensure a level playing field for all players.";
+			end;
 		}
 		warp "scy_dd",139,31;
 		close;
@@ -79,32 +86,12 @@ scythero,80,101,3	script	Death's Door#1	651,{
 scy_dd,133,50,6	script	Death's Door#2	-1,{	
 	
 OnStart:
-// Even Hours
-OnClock0000:
-OnClock0200:
-OnClock0400:
-OnClock0600:
-OnClock0800:
-OnClock1000:
-OnClock1200:
-OnClock1400:
-OnClock1600:
-OnClock1800:
-OnClock2000:
-OnClock2200:
-// Odd Hours
 OnClock0100:
-OnClock0300:
 OnClock0500:
-OnClock0700:
 OnClock0900:
-OnClock1100:
 OnClock1300:
-OnClock1500:
 OnClock1700:
-OnClock1900:
 OnClock2100:
-OnClock2300:
 	set $death_door_open,1;
 	announce "The Death's Door Event Will Begin in 3 Minutes!", bc_all;
 	sleep 180000;
@@ -114,13 +101,14 @@ OnClock2300:
 	set $death_door_open,0; // Event is ongoing - no more people may join
 	set $death_door_on,1;
 	mapannounce "scy_dd","Welcome to the Death's Door event!", bc_map;
-	sleep2 4000;
+	sleep2 5000;
 	mapannounce "scy_dd","There will be a set of portals created each round.", bc_map;
-	sleep2 4000;
+	sleep2 5000;
 	mapannounce "scy_dd","Some of the portals will lead to the next round and others will send you to your death!", bc_map;
-	sleep2 4000;
+	sleep2 5000;
 	mapannounce "scy_dd","You will have a limited amount of time to select a portal.", bc_map;
-	sleep2 4000;
+	sleep2 5000;
+	mapannounce "scy_dd","You will be muted for 1 minute upon going through a portal to ensure fairness.", bc_map;
 	mapannounce "scy_dd","The first round will begin in 5 seconds!!!", bc_map;
 	sleep2 5000;
 	set $death_door_on,2; // Event is spawning portals
@@ -337,6 +325,7 @@ Round7: // The End to Winner
 	end;
 
 L_Winner:
+	enablenpc "Guardian Angel#dd";
 	sleep2 1500;
 	mapannounce "scy_dd",getareausers("scy_dd",133,114,150,137)+ " player(s) have survived. Congratulations! ", bc_map;
 	sleep2 2000;
@@ -345,13 +334,14 @@ L_Winner:
 	mapannounce "scy_dd","All users will be kicked in 15 seconds, please claim your reward!!", bc_map;
 	sleep2 15000;
 	mapwarp "scy_dd","scythero",100,100;
+	disablenpc "Guardian Angel#dd";
 	set $death_door_on,0;
 	end;
 }		
 
 // === Death Cells (Player killer upon death portal) ===
 
-scy_dd,152,245,6	script	DeathCell	10042,4,4,{
+scy_dd,152,245,6	script	#DeathCell	10042,4,4,{
 		end;
 OnTouch:
 	specialeffect 585;
@@ -363,13 +353,22 @@ OnTouch:
 // === Reward NPC ===
 scy_dd,141,140,3	script	Guardian Angel#dd	811,{
 
+	if (getgmlevel() > 0) {
+		mes "[^FF0000Guardian Angel^000000]";
+		mes "GM's are not allowed to win.";
+		next;
+		warp "scythero",100,100;
+		end;
+	}
 	getitem 909,1;
-	mes "[^FF0000Death's Door^000000]";
+	mes "[^FF0000Guardian Angel^000000]";
 	mes "Congratulations! You have won the death's door event!";
-	announce "[Death's Door] "+strcharinfo(0)+" has won the event!",0;
+	announce "Death's Door Event: "+strcharinfo(0)+" has won the event!",0;
 	close2;
 	warp "scythero",100,100;
 	end;
+
+	
 }
 
 // === Mute System - Prevents players from saying which portal is alive/dead ===
@@ -440,7 +439,7 @@ scy_dd,246,137,6	script	Death's Door::DD_3	685,{ // The End
 }
 
 // === Mapflags ===
-scy_dd	mapflag	nocommand	80
+scy_dd	mapflag	nocommand	99
 scy_dd	mapflag	nobranch
 scy_dd	mapflag	nodrop
 scy_dd	mapflag	nopenalty
@@ -452,3 +451,6 @@ scy_dd	mapflag	novending
 scy_dd	mapflag	nowarp
 scy_dd	mapflag	nowarpto
 scy_dd	mapflag	nomemo
+scy_dd	mapflag	guildlock
+scy_dd	mapflag	partylock
+
