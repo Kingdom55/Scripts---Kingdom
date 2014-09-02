@@ -137,7 +137,7 @@ L_Undisguise:
 	atcommand "@changelook 1 " + 0;
 	atcommand "@changelook 2 " + 0;
 	atcommand "@changelook 3 " + 0;
-	mes "Your disguise and Look has been reset.";
+	mes "Your disguise and Look have been reset.";
 	end;
 
 L_Size:
