@@ -451,5 +451,6 @@ scy_dd	mapflag	novending
 scy_dd	mapflag	nowarp
 scy_dd	mapflag	nowarpto
 scy_dd	mapflag	nomemo
+scy_dd	mapflag	noreturn
 scy_dd	mapflag	guildlock
 scy_dd	mapflag	partylock
