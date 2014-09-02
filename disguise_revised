@@ -4,6 +4,7 @@
 // 1.0: Monster Disguiser & Size Changer - Zairik
 // 1.1: Customs Viewer - Rythwin & Zairik
 // 1.2: Redesigned Customs Viewer - Kingdom
+// 1.3: Added Undisguise & Look Reset - Kingdom
 
 force_1-3	mapflag	nosave	SavePoint
 force_1-3	mapflag	nomemo
@@ -36,7 +37,7 @@ scythero,109,112,3	script	Disguise Room#disguise	464,{
 
 force_1-3,100,190,6	script	Disguise Master#disguise	505,{
 
-	menu "Custom Viewer",L_Custom,"Sprite Viewer",L_Sprite,"Disguise",L_Disguise,"Change Size",L_Size,"Exit",L_Exit;
+	menu "Custom Viewer",L_Custom,"Sprite Viewer",L_Sprite,"Disguise",L_Disguise,"Undisguise & Reset Look",L_Undisguise,"Change Size",L_Size,"Exit",L_Exit;
 L_Custom:
 	set @custom_max,1213; // Number of customs
 	set @custom_min_id,27000; // First ID in custom list
@@ -131,7 +132,14 @@ L_Disguise:
 	}
 	close;
 	end;	
-		
+L_Undisguise:
+	atcommand "@undisguise";
+	atcommand "@changelook 1 " + 0;
+	atcommand "@changelook 2 " + 0;
+	atcommand "@changelook 3 " + 0;
+	mes "Your disguise and Look has been reset.";
+	end;
+
 L_Size:
 	menu "Giant",L_Giant,"Normal",L_Normal,"Small",L_Small;
 L_Normal:
