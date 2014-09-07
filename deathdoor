@@ -52,6 +52,11 @@ scythero,80,101,3	script	Death's Door#1	651,{
 			mes "You must not be in a party or guild to ensure a level playing field for all players.";
 			end;
 		}
+		if (checkweight(909,1) == 0 ){
+		mes "[^FF0000Death's Door^000000]";
+		mes "You must discard an item before entering. If you are overweight you will not be able to claim your prize.";
+		end;
+		}
 		warp "scy_dd",139,31;
 		close;
 	case 2:
