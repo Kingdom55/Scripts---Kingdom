@@ -1,0 +1,275 @@
+//===== rAthena Script =======================================
+//= Zombie Run
+//===== By: ==================================================
+//= Kingdom (Original by Rythwin)
+//===== Current Version: =====================================
+//= 2.0
+//===== Compatible With: =====================================
+//= rAthena
+//===== Description: =========================================
+//= Novices run from zombies and last person standing wins the event
+//===== Revisions ============================================
+//= 1.0 First 4 Revisions - Rythwin
+//= 2.0 Remade script from scratch, used various lines of script from v1.0 - Kingdom
+//===== Script Notes: ========================================
+//= Designed for ScytheRO (Private RO Server - By Zairik)
+//= Change .spawntime to change delay between waves (in seconds) - see comment in script
+//= Change OnTime clock to edit start times of event (for automated)
+//============================================================
+
+
+-	script	ZombieInit	-1,{
+OnInit:
+	set $zombierun_onoff,0;
+	set $zombierun_status,0;
+	pvpoff "pvp_n_2-5";
+	disablenpc "Zombie Prize#zr";
+	disablenpc "Zombie Master#zr";
+	setcell "pvp_n_2-5",77,98,77,101,cell_walkable,0; // Left Side
+	setcell "pvp_n_2-5",98,122,101,122,cell_walkable,0; // Top
+	setcell "pvp_n_2-5",122,98,122,101,cell_walkable,0; // Right Side
+	setcell "pvp_n_2-5",98,77,101,77,cell_walkable,0; // Bottom
+	end;
+}
+
+scythero,98,117,5	script	Zombie Run#zr	796,{
+	switch(select("Enter:" + ((getgmlevel() >= $gm_level_dd) ? "Autostart Event" : "") + ":Cancel")) {
+	case 1:
+		if ($zombierun_onoff == 0 && $zombierun_status == 0){
+			mes "^2099FF[~Zombie Run Event~]^000000";
+			mes "I'm sorry. The event is not running right now";
+			end;
+		}
+		if($zombierun_status == 1){
+			mes "^2099FF[~Zombie Run Event~]^000000";
+			mes "The Event is happening right now! Try again next time";
+			end;
+		}		
+		if ((getequipid(EQI_SHOES) == 2402) || (countitem(2402) > 0) ) {
+			mes "Oops! It looks like you have a pair of slotted sandals on you. Please put them in storage before you proceed!";
+			end;
+			}
+		if (BaseLevel != 1 || JobLevel != 1 || readparam(bStr) > 20 || readparam(bAgi) > 20 || readparam(bLuk) > 20 || readparam(bDex) > 20 || readparam(bInt) > 20 || readparam(bVit) > 20 || readparam(StatusPoint) > 55 || class > 0){
+			mes "^3399FF[~Zombie Run Event~]^000000";
+			mes "I'm sorry. You need to be a 1/1 Novice to play this event";
+			end;
+		}
+		sc_end sc_all;
+		warp "pvp_n_2-5",100,100;
+		end;
+	case 2:
+		mes "^3399FF[~Zombie Run Event~]^000000";
+		if ($zombierun_status ==1) {
+			mes "The event is already active.";
+			end;
+		}
+		if ($zombierun_onoff == 1) {
+			mes "The event already has open registration";
+			end;
+		}
+		mes "Are you sure you wish to start the event?";
+		switch(select("Yes:No")){
+		case 1:
+			next;
+			mes "^3399FF[~Zombie Run Event~]^000000";
+			mes "The event is now open for registration";
+			set $zombierun_onoff,1;
+			donpcevent "Zombie Run#zr2::OnStart";
+			end;
+		case 2:
+			next;
+			mes "^3399FF[~Zombie Run Event~]^000000";
+			mes "Okay, the event will not be started right now.";
+			end;
+		
+	}
+	case 3:
+		end;
+	}
+}	
+	
+pvp_n_2-5,98,100,5	script	Zombie Run#zr2	-1,{
+
+OnStart:
+//OnClock0100:
+//OnClock0500:
+	set $zombierun_onoff,1;
+	killmonsterall "pvp_n_2-5";
+	announce "Zombie Run Event: The event will start in 3 minutes!",0;
+	sleep2 5000;
+	announce "Zombie Run Event: To play, @go 0 and talk to the NPC.",0;
+	sleep2 5000;
+	announce "Zombie Run Event: Remember, you must be a 1/1 novice to join.",0;
+	sleep2 50000;
+	announce "Zombie Run Event: The event will start in 2 minutes!",0;
+	sleep2 60000;
+	announce "Zombie Run Event: The event will start in 1 minute!",0;
+	sleep2 60000;
+	set $zombierun_onoff,0; // Close registration
+	set $zombierun_status,1; // Start event
+	mapannounce "pvp_n_2-5","Zombie Run Event: Hello players! Welcome to Zombie Run!",0;
+	sleep2 5000;
+	mapannounce "pvp_n_2-5","Zombie Run Event: You must be the last Novice standing in this map once the zombies start appearing.",0;
+	sleep2 5000;
+	mapannounce "pvp_n_2-5","Zombie Run Event: Zombies will be spawned near the Zombie Master until 1 player remains!",0;
+	sleep2 5000;
+	mapannounce "pvp_n_2-5","Zombie Run Event: Good Luck! The zombies will spawn in 10 seconds!",0;
+	sleep2 5000;
+	mapannounce "pvp_n_2-5","Zombie Run Event: 5",0;
+	sleep2 1000;
+	mapannounce "pvp_n_2-5","Zombie Run Event: 4",0;
+	sleep2 1000;
+	mapannounce "pvp_n_2-5","Zombie Run Event: 3",0;
+	sleep2 1000;
+	mapannounce "pvp_n_2-5","Zombie Run Event: 2",0;
+	sleep2 1000;
+	mapannounce "pvp_n_2-5","Zombie Run Event: 1",0;
+	sleep2 1000;
+	mapannounce "pvp_n_2-5","Zombie Run Event: Go go go! Run for your survival!",0;
+	enablenpc "Zombie Master#zr";
+	donpcevent "Zombie Master#zr::OnSpawn";
+}
+
+pvp_n_2-5,99,100,5	script	Zombie Master#zr	1870,{
+
+OnSpawn:
+	set .spawntime,25; // Delay (in seconds) between spawns (change value below as well)
+	while(getmapusers("pvp_n_2-5") > 1 && $zombierun_status == 1) {
+		while (.spawntime < 25) { // Delay (in seconds) between spawns (change value above as well)
+			if (getmapusers("pvp_n_2-5") <= 1) goto ZR_Winner;
+			sleep2 1000;
+			.spawntime ++;
+		}
+		set .spawntime,0;
+		set .zmaster_move, rand(1,5); // Random of 5 locations
+		if (.zmaster_move == 1) {
+			movenpc "Zombie Master#zr",88,111;
+			sleep2 3000;
+			monster "pvp_n_2-5",85,111,"Zombie",1036,1,"";
+			monster "pvp_n_2-5",91,111,"Zombie",1036,1,"";
+			monster "pvp_n_2-5",88,108,"Zombie",1036,1,"";
+			monster "pvp_n_2-5",88,114,"Zombie",1036,1,"";
+		}
+		if (.zmaster_move == 2) {
+			movenpc "Zombie Master#zr",111,111;
+			sleep2 3000;
+			monster "pvp_n_2-5",108,111,"Zombie",1036,1,"";
+			monster "pvp_n_2-5",114,111,"Zombie",1036,1,"";
+			monster "pvp_n_2-5",111,108,"Zombie",1036,1,"";
+			monster "pvp_n_2-5",111,114,"Zombie",1036,1,"";
+		}		
+		if (.zmaster_move == 3) {
+			movenpc "Zombie Master#zr",111,88;
+			sleep2 3000;
+			monster "pvp_n_2-5",108,88,"Zombie",1036,1,"";
+			monster "pvp_n_2-5",114,88,"Zombie",1036,1,"";
+			monster "pvp_n_2-5",111,85,"Zombie",1036,1,"";
+			monster "pvp_n_2-5",111,91,"Zombie",1036,1,"";
+		}		
+		if (.zmaster_move == 4) {
+			movenpc "Zombie Master#zr",88,88;
+			sleep2 3000;
+			monster "pvp_n_2-5",85,88,"Zombie",1036,1,"";
+			monster "pvp_n_2-5",91,88,"Zombie",1036,1,"";
+			monster "pvp_n_2-5",88,85,"Zombie",1036,1,"";
+			monster "pvp_n_2-5",88,91,"Zombie",1036,1,"";
+		}	
+		if (.zmaster_move == 5) {
+			movenpc "Zombie Master#zr",99,100;
+			sleep2 3000;
+			monster "pvp_n_2-5",85,100,"Zombie",1036,1,"";
+			monster "pvp_n_2-5",91,100,"Zombie",1036,1,"";
+			monster "pvp_n_2-5",88,99,"Zombie",1036,1,"";
+			monster "pvp_n_2-5",88,99,"Zombie",1036,1,"";
+		}			
+	}
+ZR_Winner:
+	killmonsterall "pvp_n_2-5";	
+	set $zombierun_status,0;
+	mapannounce "pvp_n_2-5","Zombie Run Event: Congratulations! You have won the event!",0;
+	disablenpc "Zombie Master#zr";
+	killmonsterall "pvp_n_2-5";
+	sleep2 2000;
+	mapannounce "pvp_n_2-5","Please talk to the Prize NPC in the middle of the room for your reward!",0;
+	enablenpc "Zombie Prize#zr";
+	sleep2 50000;
+	mapannounce "pvp_n_2-5","All players will be kicked in 10 seconds, please claim your reward!",0;
+	sleep2 10000;
+	mapwarp "pvp_n_2-5","scythero",100,100;
+	end;
+
+OnPCLogoutEvent:
+OnPCDieEvent:
+	getmapxy(.@map$,.@x,.@y,0);
+	if(.@map$=="pvp_n_2-5") {
+		warp "scythero",100,100;
+		end;
+	}
+}
+pvp_n_2-5,100,100,5	script	Zombie Prize#zr	100,{
+
+	if (checkweight(909,1) == 0 ){
+		mes "You must discard an item before entering. If you are overweight, you will not be able to claim your rp";
+		end;
+	}
+	mes "^3399FF[~Zombie Run Event~]^000000";
+	mes "Hi there "+strcharinfo (0)+"!";
+	mes "You will now be warped out with your prize!";
+	next;
+	getitem 909,1;
+	announce "Zombie Run Event: "+strcharinfo(0)+" has won the event! Congratulations!",0;
+	warp "scythero",100,100;
+	set $zombierun_status,0;
+	disablenpc "Zombie Prize#zr";
+	end;
+}
+
+// Left Side Barricades
+pvp_n_2-5,77,98,5	script	Barricade#300	1905,{
+}
+pvp_n_2-5,77,99,5	script	Barricade#301	1905,{
+}
+pvp_n_2-5,77,100,5	script	Barricade#302	1905,{
+}
+pvp_n_2-5,77,101,5	script	Barricade#303	1905,{
+}
+// Top Barricades
+pvp_n_2-5,98,122,5	script	Barricade#304	1905,{
+}
+pvp_n_2-5,99,122,5	script	Barricade#305	1905,{
+}
+pvp_n_2-5,100,122,5	script	Barricade#306	1905,{
+}
+pvp_n_2-5,101,122,5	script	Barricade#307	1905,{
+}
+// Right Side Barricades
+pvp_n_2-5,122,101,5	script	Barricade#308	1905,{
+}
+pvp_n_2-5,122,100,5	script	Barricade#309	1905,{
+}
+pvp_n_2-5,122,99,5	script	Barricade#310	1905,{
+}
+pvp_n_2-5,122,98,5	script	Barricade#311	1905,{
+}
+// Bottom Barricades
+pvp_n_2-5,101,77,5	script	Barricade#312	1905,{
+}
+pvp_n_2-5,100,77,5	script	Barricade#313	1905,{
+}
+pvp_n_2-5,99,77,5	script	Barricade#314	1905,{
+}
+pvp_n_2-5,98,77,5	script	Barricade#315	1905,{
+}
+
+pvp_n_2-5	mapflag	nosave	SavePoint
+pvp_n_2-5	mapflag	nowarp
+pvp_n_2-5	mapflag	nowarpto
+pvp_n_2-5	mapflag	noteleport
+pvp_n_2-5	mapflag	nomemo
+pvp_n_2-5	mapflag	nopenalty
+pvp_n_2-5	mapflag	nobranch
+pvp_n_2-5	mapflag	noicewall
+pvp_n_2-5	mapflag	nogo
+pvp_n_2-5	mapflag	noskill
+pvp_n_2-5	mapflag	noitemconsumption
+pvp_n_2-5	mapflag	nopvp
