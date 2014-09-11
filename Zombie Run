@@ -272,5 +272,4 @@ pvp_n_2-5	mapflag	noicewall
 pvp_n_2-5	mapflag	nogo
 pvp_n_2-5	mapflag	noskill
 pvp_n_2-5	mapflag	noitemconsumption
-pvp_n_2-5	mapflag	nopvp
 pvp_n_2-5	mapflag	noreturn
