@@ -17,6 +17,7 @@ force_1-3	mapflag	nodrop
 force_1-3	mapflag	nocommand	99
 force_1-3	mapflag	restricted
 force_1-3	mapflag	noskill
+force_1-3	mapflag	fireworks
 
 
 scythero,109,112,3	script	Disguise Room#disguise	464,{
@@ -178,3 +179,39 @@ L_YES:
 	warp "scythero",100,100;
 	end;
 }
+
+    // COMBAT TEST
+    force_1-3,91,177,0,0	monster	Combat Test	1078,1,0,0,0
+    force_1-3,91,178,0,0	monster	Combat Test	1081,1,0,0,0
+    force_1-3,91,179,0,0	monster	Combat Test	1079,1,0,0,0
+    force_1-3,91,180,0,0	monster	Combat Test	1078,1,0,0,0
+    force_1-3,91,181,0,0	monster	Combat Test	1081,1,0,0,0
+    force_1-3,91,182,0,0	monster	Combat Test	1079,1,0,0,0
+    force_1-3,91,183,0,0	monster	Combat Test	1078,1,0,0,0
+    force_1-3,91,184,0,0	monster	Combat Test	1081,1,0,0,0
+    force_1-3,91,185,0,0	monster	Combat Test	1079,1,0,0,0
+    force_1-3,91,186,0,0	monster	Combat Test	1078,1,0,0,0
+    force_1-3,91,187,0,0	monster	Combat Test	1081,1,0,0,0
+    force_1-3,91,188,0,0	monster	Combat Test	1079,1,0,0,0
+    force_1-3,91,189,0,0	monster	Combat Test	1078,1,0,0,0
+    force_1-3,91,190,0,0	monster	Combat Test	1081,1,0,0,0
+    force_1-3,91,191,0,0	monster	Combat Test	1079,1,0,0,0
+    force_1-3,91,192,0,0	monster	Combat Test	1078,1,0,0,0
+    force_1-3,91,193,0,0	monster	Combat Test	1081,1,0,0,0
+    force_1-3,108,177,0,0	monster	Combat Test	1078,1,0,0,0
+    force_1-3,108,178,0,0	monster	Combat Test	1081,1,0,0,0
+    force_1-3,108,179,0,0	monster	Combat Test	1079,1,0,0,0
+    force_1-3,108,180,0,0	monster	Combat Test	1078,1,0,0,0
+    force_1-3,108,181,0,0	monster	Combat Test	1081,1,0,0,0
+    force_1-3,108,182,0,0	monster	Combat Test	1079,1,0,0,0
+    force_1-3,108,183,0,0	monster	Combat Test	1078,1,0,0,0
+    force_1-3,108,184,0,0	monster	Combat Test	1081,1,0,0,0
+    force_1-3,108,185,0,0	monster	Combat Test	1079,1,0,0,0
+    force_1-3,108,186,0,0	monster	Combat Test	1078,1,0,0,0
+    force_1-3,108,187,0,0	monster	Combat Test	1081,1,0,0,0
+    force_1-3,108,188,0,0	monster	Combat Test	1079,1,0,0,0
+    force_1-3,108,189,0,0	monster	Combat Test	1078,1,0,0,0
+    force_1-3,108,190,0,0	monster	Combat Test	1081,1,0,0,0
+    force_1-3,108,191,0,0	monster	Combat Test	1079,1,0,0,0
+    force_1-3,108,192,0,0	monster	Combat Test	1078,1,0,0,0
+    force_1-3,108,193,0,0	monster	Combat Test	1081,1,0,0,0
