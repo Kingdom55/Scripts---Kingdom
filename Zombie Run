@@ -32,7 +32,7 @@ OnInit:
 	end;
 }
 
-scythero,98,117,5	script	Zombie Run#zr	796,{
+scythero,98,117,5	script	Zombie Run Event#zr	796,{
 	switch(select("Enter:" + ((getgmlevel() >= $gm_level_dd) ? "Autostart Event" : "") + ":Cancel")) {
 	case 1:
 		if ($zombierun_onoff == 0 && $zombierun_status == 0){
@@ -100,11 +100,11 @@ OnStart:
 	announce "Zombie Run Event: To play, @go 0 and talk to the NPC.",0;
 	sleep2 5000;
 	announce "Zombie Run Event: Remember, you must be a 1/1 novice to join.",0;
-	sleep2 50000;
+//	sleep2 50000;
 	announce "Zombie Run Event: The event will start in 2 minutes!",0;
-	sleep2 60000;
+//	sleep2 60000;
 	announce "Zombie Run Event: The event will start in 1 minute!",0;
-	sleep2 60000;
+//	sleep2 60000;
 	set $zombierun_onoff,0; // Close registration
 	set $zombierun_status,1; // Start event
 	mapannounce "pvp_n_2-5","Zombie Run Event: Hello players! Welcome to Zombie Run!",0;
@@ -131,11 +131,11 @@ OnStart:
 }
 
 pvp_n_2-5,99,100,5	script	Zombie Master#zr	1870,{
-
+end;
 OnSpawn:
-	set .spawntime,25; // Delay (in seconds) between spawns (change value below as well)
+	set .spawntime,30; // Delay (in seconds) between spawns (change value below as well)
 	while(getmapusers("pvp_n_2-5") > 1 && $zombierun_status == 1) {
-		while (.spawntime < 25) { // Delay (in seconds) between spawns (change value above as well)
+		while (.spawntime < 30) { // Delay (in seconds) between spawns (change value above as well)
 			if (getmapusers("pvp_n_2-5") <= 1) goto ZR_Winner;
 			sleep2 1000;
 			.spawntime ++;
@@ -188,7 +188,6 @@ ZR_Winner:
 	set $zombierun_status,0;
 	mapannounce "pvp_n_2-5","Zombie Run Event: Congratulations! You have won the event!",0;
 	disablenpc "Zombie Master#zr";
-	killmonsterall "pvp_n_2-5";
 	sleep2 2000;
 	mapannounce "pvp_n_2-5","Please talk to the Prize NPC in the middle of the room for your reward!",0;
 	enablenpc "Zombie Prize#zr";
@@ -209,7 +208,7 @@ OnPCDieEvent:
 pvp_n_2-5,100,100,5	script	Zombie Prize#zr	100,{
 
 	if (checkweight(909,1) == 0 ){
-		mes "You must discard an item before entering. If you are overweight, you will not be able to claim your rp";
+		mes "You must discard an item before entering. If you are overweight, you will not be able to claim your prize";
 		end;
 	}
 	mes "^3399FF[~Zombie Run Event~]^000000";
@@ -272,4 +271,3 @@ pvp_n_2-5	mapflag	noicewall
 pvp_n_2-5	mapflag	nogo
 pvp_n_2-5	mapflag	noskill
 pvp_n_2-5	mapflag	noitemconsumption
-pvp_n_2-5	mapflag	noreturn
