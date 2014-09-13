@@ -47,6 +47,7 @@ scythero,98,117,5	script	Zombie Run Event#zr	796,{
 			end;
 		}		
 		if ((getequipid(EQI_SHOES) == 2402) || (countitem(2402) > 0) ) {
+			mes "^2099FF[~Zombie Run Event~]^000000";
 			mes "Oops! It looks like you have a pair of slotted sandals on you. Please put them in storage before you proceed!";
 			end;
 			}
@@ -54,6 +55,11 @@ scythero,98,117,5	script	Zombie Run Event#zr	796,{
 			mes "^3399FF[~Zombie Run Event~]^000000";
 			mes "I'm sorry. You need to be a 1/1 Novice to play this event";
 			end;
+		}
+		if (checkweight(909,1) == 0 ){
+		mes "^2099FF[~Zombie Run Event~]^000000";
+		mes "You must discard an item before entering. If you are overweight you will not be able to claim your prize.";
+		end;
 		}
 		sc_end sc_all;
 		warp "pvp_n_2-5",100,100;
