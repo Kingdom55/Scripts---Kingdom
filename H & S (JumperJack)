@@ -1,0 +1,250 @@
+//===== rAthena Script =======================================
+//= Jumper Jack a.k.a. Hide and Seek Event
+//===== By: ==================================================
+//= Rythwin (edited by Kingdom)
+//===== Current Version: =====================================
+//= 1.2
+//===== Compatible With: =====================================
+//= rAthena
+//===== Description: =========================================
+//= Players have to find the NPC.
+//= NPC is placed in one of 10 random maps with random coordinates
+//= NPC is further disguised as a random monster
+//===== Revisions ============================================
+//= 1.0 Added a 5 minute warning into each round.
+//= 1.1 Changed $monster to .jmonster (unnecessary global variable)
+//= 1.2 Revised - Changed various variable names and removed unnecessary ones
+//=  as well as overall clean-up. - Kingdom
+//===== Script Notes: ========================================
+//= Designed for ScytheRO (Private RO Server - By Zairik)
+//= Change OnTime clock to edit start times of event (for automated running)
+//============================================================
+
+-	script	JumperEvent	-1,{
+
+OnInit:
+	set .jr_round_max,3;
+	set .jr_round,1;
+	set $@jr_reward_id,909;
+	set $@jr_prize_num,1;
+	set $jumperstatus,0;
+	set .jumperrunning,0;
+	disablenpc "Jumper Jack1";
+	disablenpc "Jumper Jack2";
+	disablenpc "Jumper Jack3";
+	disablenpc "Jumper Jack4";
+	disablenpc "Jumper Jack5";
+	disablenpc "Jumper Jack6";
+	disablenpc "Jumper Jack7";
+	disablenpc "Jumper Jack8";
+	disablenpc "Jumper Jack9";
+	disablenpc "Jumper Jack10";
+	end;
+
+OnWhisperGlobal:
+	if (getgmlevel() < 80) end;
+	if (.jumperrunning == 1 || agitcheck() == 1 || agitcheck2() == 1){
+		mes "Jumper Jack Control:";
+		mes "I'm sorry, please try again when the event is not running and/or WoE is not in progress";
+		close;
+		end;
+	}
+	
+L_JumperJackAdmin:
+	mes "[^FF0000Jumper Jack Control^000000]";
+	mes "Number of Rounds: "+.jr_round_max+"";
+	mes "Event Prize: ^FF0000"+getitemname($@jr_reward_id)+"^000000 \nAmount: "+$@jr_prize_num+"";
+	switch(select("Set Rounds:Set Prize:Start Event:Close")){	
+	Case 1:
+		switch(select("Change Number of Rounds:Cancel")){
+		Case 1:
+			mes "-------------------";
+			mes "Enter the desired number of rounds";
+			input .jr_round_max;
+			close2;
+			goto L_JumperJackAdmin;		
+		Case 2:
+			close2;
+			goto L_JumperJackAdmin;
+		}		
+	Case 2:
+		switch(select("Input Prize:Input Number of Prizes:Cancel")){
+			Case 1:
+				mes "-------------------";
+				mes "Input VALID ItemID for prize";
+				input $@jr_reward_id;
+				close2;
+				goto L_JumperJackAdmin;		
+			Case 2:
+				mes "-------------------";
+				mes "Input amount of prizes to be given";
+				input $@jr_prize_num;
+				close2;
+				goto L_JumperJackAdmin;			
+			Case 3:
+				close2;
+				goto L_JumperJackAdmin;
+		}			
+	Case 3:
+		switch(select("Confirm Event Start:Cancel")){
+		Case 1:
+			close2;
+			set .jr_round,1;
+			goto OnStart;
+		
+		Case 2:
+			close2;
+			goto L_JumperJackAdmin;
+		}	
+	Case 4:
+		end;
+	}
+
+/*	
+OnClock1155:
+OnClock2355:
+	announce "Jumper Jack: The Jumper Jack event will start in 3 minutes!",0;
+	sleep 180000;
+	announce "Jumper Jack: The Jumper Jack event will start in 1 minute!",0;
+	sleep 60000;
+	goto OnStart;
+*/	
+	
+OnStart:
+	set .BlackList$, "1003,1006,1017,1021,1022,1027,1043,1075,1136,1137,1168," + 
+	    "1171,1172,1173,1181,1187,1210,1217,1218,1222,1223,1224,1225,1226,1227,1228," + 
+	    "1233,1284,1407,1411,1414,1495,1501,1900,1996,2000,2001,2002,2003,2004," + 
+	    "2005,2006,2007,2011,2012,2025,2028,2029,2030,2031,2032,2033,2034,2035," + 
+	    "2036,2037,2038,2039,2040,2041,2042,2043,2044,2045,2046,2047,2048,2049," + 
+	    "2050,2051,2052,2053,2054,2055,2056,2057,2058,2059,2060,2061,2062,2063," + 
+	    "2064,2065,2066,2067,2075,2076,2077,2078,2079,2080,2081,2083,2084,2085," + 
+	    "2086,2087,2088,2089,2090,2091,2092,2093,2094,2095,2096,2097,2098,2099," + 
+	    "2100,2101,2012,2103,2104,2105,2106,2107,2108,2109,2110,2111,2112,2113," + 
+	    "2114,2115,2116,2117,2118,2119,2120,2121,2123,2124,2125,1496," +
+		"1062,1123,1124,1125,1126,1135,1135,1182,1232,1288,1325,1326,1327,1328," +
+		"1329,1330,1331,1332,1333,1334,1335,1336,1337,1338,1339,1340,1341,1342," +
+		"1343,1344,1345,1346,1347,1348,1349,1350,1351,1352,1353,1354,1355,1356," +
+		"1357,1358,1359,1360,1361,1362,1363,1385,1399,1419,1420,1421,1422,1423," +
+		"1424,1425,1426,1427,1428,1429,1430,1431,1432,1433,1434,1435,1436,1437," +
+		"1438,1439,1440,1441,1442,1443,1444,1445,1446,1447,1448,1449,1450,1451," +
+		"1452,1453,1454,1455,1456,1457,1458,1459,1460,1461,1462,1463,1464,1465," +
+		"1466,1467,1468,1469,1470,1471,1472,1473,1474,1475,1476,1477,1478,1479," +
+		"1480,1481,1482,1483,1484,1485,1486,1487,1488,1489,1490,1491,1502,";
+		
+	if ( agitcheck() == 1 || agitcheck2() == 1 ) {
+		set .jr_round,1;
+		set $jumperstatus,0;
+		disablenpc "Jumper Jack"+.mapno+"";
+		set .jumperrunning,0;
+		sleep 10000;
+		announce "Jumper Jack: Event has been cancelled because WoE is going on!",0;
+		end;
+	}
+	if (.jr_round > .jr_round_max){
+		stopnpctimer;
+		announce "Jumper Jack: The event is now over!",0;
+		set $jumperstatus,0;
+		disablenpc "Jumper Jack"+.mapno+"";
+		set .jumperrunning,0;
+		sleep 2000;
+		end;
+	}
+	if (.jr_round != 1) {
+			announce "Jumper Jack: Please wait 10 seconds for the next round",bc_blue;
+			sleep 10000;
+	}	
+JR_monster:
+	set .jmonster, rand(1001,2082);
+	if(compare(","+.BlackList$+"," , ","+.Monster+",")) goto JR_monster;
+	set .jumperrunning,1;
+	if (.jr_round == 1){
+		announce "Jumper Jack: Event is starting now!",0;
+		sleep 1000;
+		announce "Total Number of rounds is: ~ "+.jr_round_max+" ~!",0;
+		sleep 2000;
+	}
+	stopnpctimer;
+	set .mapno, rand(1,10);
+	if (.mapno == 1) set .jmpmap$,"morocc";
+	if (.mapno == 2) set .jmpmap$,"gef_fild10";
+	if (.mapno == 3) set .jmpmap$,"yuno";
+	if (.mapno == 4) set .jmpmap$,"hugel";
+	if (.mapno == 5) set .jmpmap$,"niflheim";
+	if (.mapno == 6) set .jmpmap$,"lighthalzen";
+	if (.mapno == 7) set .jmpmap$,"prt_maze03";
+	if (.mapno == 8) set .jmpmap$,"brasilis";
+	if (.mapno == 9) set .jmpmap$,"malaya";
+	if (.mapno == 10) set .jmpmap$,"amatsu";
+	sleep 1000;
+	announce "Jumper Jack: Round Number: "+.jr_round+" !",0;
+	sleep 2000;
+	announce "Jumper Jack: I'm now in "+.jmpmap$+"!",0;
+	while(1) { 
+		set $@ex,rand(0,300);
+		set $@ey,rand(0,300);
+		if(checkcell(""+.jmpmap$+"",$@ex,$@ey,cell_chkpass)) break;
+	}
+	initnpctimer;
+	set $jumperfound,0;
+	set $jumperstatus,1;
+	enablenpc "Jumper Jack"+.mapno+"";
+	movenpc "Jumper Jack"+.mapno+"",$@ex,$@ey;
+//	atcommand "@request "+$@ex+" "+$@ey+""; // Gives coordinates to online GMs
+//	atcommand "@request disguised as "+.jmonster+""; // Gives disguise to online GMs
+	setnpcdisplay "Jumper Jack"+.mapno+"","Jumper Jack",.jmonster;
+	.jr_round ++;
+	sleep 2000;
+	announce "Jumper Jack: You have 10 minutes to find me! I'm also disguised.",0;
+	end;
+	
+	onTimer300000:
+		if ($jumperfound == 1) end;
+		announce "Jumper Jack: Only 5 minutes left to find me!",0;
+		sleep 1000;
+		announce "Jumper Jack: Reminder~ I'm in "+.jmpmap$+"!",0;
+		end;
+		
+	onTimer600000:	
+		if ($jumperfound == 1) end;
+		set $jumperstatus,0;
+		announce "Jumper Jack: Wow! No one found me @ "+.jmpmap$+" "+$@ex+" "+$@ey+" !!",0;
+		sleep 3000;
+		announce "Jumper Jack: I was at "+$@ex+" "+$@ey+" !!",0;
+		sleep 5000;
+		disablenpc "Jumper Jack"+.mapno+"";
+		donpcevent "JumperEvent::OnStart";
+		end;
+		}
+	
+-	script	Jumper Jack	-1,{
+	if ($jumperstatus == 0){
+		mes "[Jumper Jack]";
+		mes "I'm sorry, the round is over!";
+		next;
+		mes "[Jumper Jack]";
+		mes "Please wait for the next round";
+		close;
+		end;
+	}	
+	set $jumperstatus,0;
+	set $jumperfound,1;
+	announce "Jumper Jack: "+strcharinfo(0)+" found me!!",0;
+	getitem $@jr_reward_id,$@jr_prize_num;
+	sleep 3000;
+	announce "Jumper Jack: I was at "+$@ex+" "+$@ey+" !!",0;
+	sleep 5000;
+	disablenpc "Jumper Jack"+.mapno+"";
+	donpcevent "JumperEvent::OnStart";
+	end;
+}
+
+morocc,292,120,1	duplicate(Jumper Jack)	Jumper Jack1	100
+gef_fild10,323,145,1	duplicate(Jumper Jack)	Jumper Jack2	100
+yuno,32,269,1	duplicate(Jumper Jack)	Jumper Jack3	100
+hugel,209,108,1	duplicate(Jumper Jack)	Jumper Jack4	100
+niflheim,293,278,1	duplicate(Jumper Jack)	Jumper Jack5	100
+lighthalzen,176,173,1	duplicate(Jumper Jack)	Jumper Jack6	100
+prt_maze03,136,184,1	duplicate(Jumper Jack)	Jumper Jack7	100
+brasilis,220,233,1	duplicate(Jumper Jack)	Jumper Jack8	100
+malaya,173,93,1	duplicate(Jumper Jack)	Jumper Jack9	100
+amatsu,163,221,1	duplicate(Jumper Jack)	Jumper Jack10	100
