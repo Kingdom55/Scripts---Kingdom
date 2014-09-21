@@ -1,0 +1,147 @@
+//===== rAthena Script =======================================
+//= Quest Collection (ScytheRO)
+//===== By: ==================================================
+//= Kingdom
+//===== Current Version: =====================================
+//= 1.0
+//===== Compatible With: =====================================
+//= rAthena
+//===== Description: =========================================
+//= Collection of quest scripts including iRO and custom gears
+//===== Revisions ============================================
+//= 1.0 Quest #1,#2
+//= 
+//===== Script Notes: ========================================
+//= Designed for ScytheRO (Private RO Server - By Zairik)
+//============================================================
+
+// 5300 Bullock Hat,5429 Bogy Hat,5748 Classic Hat,5816 Classic Hat (cowbow hat)),5417 Crown parrots,5455 Decorative Geographer,5496 Dice Hat, 5749/5760 Driver Band , 5595 Eye of Juno (strong item?)
+// 5437 Fairy Flower, 5210 Flapping Angel Wing, 5334 Flapping Angeling, 5785 Green Bunny Hairband, 5465 Celestial Hat (hat of fortune), 5481 Hermode Cap, 5423 I love china, 5658 Imp Hat
+// 5497 King Tiger Doll Hat, 5537 Kwati Hat, 5418 Legionnarie Hat, 5366 Love Dad Bandana, 
+
+
+// 5334, 5423
+
+
+
+scythero,107,106,3	script	Quest Trader	100,{
+
+menu "Puppy Hat",L_Quest1,"Beer Hat",L_Quest2;
+
+// Reward: Puppy Hat (5182)
+// Items: 10 Puppy Headband (5118) / 250 Matyr's Leash (2618) / 250 Singing Plant (707) / 3 Magic Gold Coin (30001)
+L_Quest1:
+	mes "[^FF0000Pet Lover^000000]";
+	mes "^08088APuppy Hat Requirements:^000000";
+	mes "^FF000010^000000 Puppy Headband (5118)";
+	mes "^FF0000250^000000 Matyr's Leach (2618)";
+	mes "^FF0000250^000000 Singing Plant (707)";
+	mes "^FF00003^000000 Magic Gold Coin";
+	next;
+	set item_check,1;
+	mes "^08088APuppy Hat Progress:^000000";
+	if (countitem(5118)>=10) { 
+		mes "You have 10 Puppy Headbands.";
+	}
+	else { 
+		mes "^08088A~^000000^FF0000You don't have enough Puppy Headband.^000000";
+		set item_check,0;
+	}
+	if (countitem(2618)>=250)  mes "^08088A~^000000You have 250 Matyr's Leash.";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Matyr's Leash.^000000";
+		set item_check,0;
+		}
+	if (countitem(707)>=250)  mes "^08088A~^000000You have 250 Singing Plant.";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Singing Plant.^000000";
+		set item_check,0;
+	}
+	if (countitem(30001) >= 3) mes "^08088A~^000000You have 3 Magic Gold Coin";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Magic Gold Coin.^000000\n (You can trade 100m zeny for a gold coin using the Coin Exchange npc)";
+		set item_check,0;
+	}
+	if (item_check == 0) end;
+	next;
+	delitem 5118,10;
+	delitem 2618,250;
+	delitem 707,250;
+	delitem 30001,3;
+	getitem 5182,1;
+	mes "[^FF0000Pet Lover^000000]";
+	mes "I managed to find a few puppies with the supplies you gave me. Please take one for your hard work and remember to take care of it!";
+	end;
+
+
+// Reward: Beer Hat (5416)
+// Items: 300 Green Beer (12712), 50 Alcohol (970) *vend item* / 800 Ice Cubic (7066) / 15 Mug (7891) *no drop* / 5 Magic Gold Coin (30001)
+
+// 1396,CRYSTAL_2,Earth Crystal,Earth Crystal,1,15,0,0,0,0,0,0,100,99,1,1,1,1,999,1,0,0,0,0,20,0x161,190,0,0,0,0,0,0,0,0,0,0,539,3800,530,4500,561,5000,667,4900,5097,7000,531,6500,558,5000,608,250,0,0,0,0
+
+L_Quest2:
+	set item_check,1;
+	mes "^08088ABeer Hat Progress:^000000";
+	if (countitem(12712)>=300) { 
+		mes "You have 300 Green Beer.";
+	}
+	else { 
+		mes "^08088A~^000000^FF0000You don't have enough Green Beer.^000000";
+		set item_check,0;
+	}
+	if (countitem(970)>=50)  mes "^08088A~^000000You have 50 Alcohol.";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Alcohol.^000000";
+		set item_check,0;
+		}
+	if (countitem(7066)>=800)  mes "^08088A~^000000You have 800 Ice Cubic.";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Ice Cubic.^000000";
+		set item_check,0;
+	}
+	if (countitem(30001) >= 5) mes "^08088A~^000000You have 5 Magic Gold Coin";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Magic Gold Coin.^000000\n (You can trade 100m zeny for a gold coin using the Coin Exchange npc)";
+		set item_check,0;
+	}
+	if (item_check == 0) end;
+	next;
+	delitem 12712,300;
+	delitem 970,50;
+	delitem 7066,800;
+	delitem 30001,5;
+	getitem 5416,1;
+	mes "[^FF0000Drunk Vender^000000]";
+	mes "Oh yeah, now the party can begin. Join me by having this special Beer Hat!";
+	end;
+	
+	
+L_Quest3:
+// Reward: Flapping Angel Wing (5210)
+// Items: 300 Soft Feather (7063), 1 Angel Wing (2254), 1 Angeling Card (4054), 5 Magic Gold Coin
+	
+	
+
+	
+L_Quest4:
+// Reward: Flapping Angeling(5334)
+// Items: 100 Soft Feather (7063), 1 Angeling Hat (5132), 1 Angeling Card, 1 Magic Gold Coin
+
+
+
+
+L_Quest5:
+// Reward: I love China(5423)
+// Items: 500 Heart of Mermaid (950), 200 Flame Heart, 100 China (736), 200 Wing of Dragonfly (7064), 5 Magic Gold Coin
+
+
+
+
+}
+
+
+
+// Quest #2 Mob
+// 1563,DRUNK_TENGU,Drunk Tengu,Drunk Tengu,99,500000,0,0,0,2,17000,19000,70,80,500,200,200,200,2000,500,10,12,2,6,42,0x3985,190,890,1920,672,0,0,0,0,0,0,0,12712,10,7891,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+ma_fild02,0,0,0,0	monster	Drunk Tengu	1563,125,0,0,0
+
