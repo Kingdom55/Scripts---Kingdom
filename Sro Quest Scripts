@@ -58,7 +58,7 @@ L_Quest1:
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Singing Plant.^000000";
 		set item_check,0;
 	}
-	if (countitem(30001) >= 4) mes "^08088A~^000000You have 4 Magic Gold Coin";
+	if (countitem(30001) >= 4) mes "^08088A~^000000You have 4 Magic Gold Coin.";
 	else { 
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Magic Gold Coin.^000000\n (You can trade 100m zeny for a gold coin using the Coin Exchange npc)";
 		set item_check,0;
@@ -117,7 +117,7 @@ L_Quest2:
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Mug.^000000";
 		set item_check,0;
 	}
-	if (countitem(30001) >= 5) mes "^08088A~^000000You have 5 Magic Gold Coin";
+	if (countitem(30001) >= 5) mes "^08088A~^000000You have 5 Magic Gold Coin.";
 	else { 
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Magic Gold Coin.^000000\n (You can trade 100m zeny for a gold coin using the Coin Exchange npc)";
 		set item_check,0;
@@ -171,7 +171,7 @@ L_Quest3:
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Angeling Card.^000000";
 		set item_check,0;
 	}
-	if (countitem(30001) >= 6) mes "^08088A~^000000You have 6 Magic Gold Coin";
+	if (countitem(30001) >= 6) mes "^08088A~^000000You have 6 Magic Gold Coin.";
 	else { 
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Magic Gold Coin.^000000\n (You can trade 100m zeny for a gold coin using the Coin Exchange npc)";
 		set item_check,0;
@@ -224,7 +224,7 @@ L_Quest4:
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Angeling Card.^000000";
 		set item_check,0;
 	}
-	if (countitem(30001) >= 3) mes "^08088A~^000000You have 3 Magic Gold Coin";
+	if (countitem(30001) >= 3) mes "^08088A~^000000You have 3 Magic Gold Coin.";
 	else { 
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Magic Gold Coin.^000000\n (You can trade 100m zeny for a gold coin using the Coin Exchange npc)";
 		set item_check,0;
@@ -280,10 +280,10 @@ L_Quest5:
 	}
 	if (countitem(7064)>=200)  mes "^08088A~^000000You have 200 Wing of Dragonfly.";
 	else { 
-		mes "^08088A~^000000^FF0000^FF0000You don't have enough Wing of Dragonfly^000000";
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Wing of Dragonfly.^000000";
 		set item_check,0;
 	}
-	if (countitem(30001) >= 5) mes "^08088A~^000000You have 5 Magic Gold Coin";
+	if (countitem(30001) >= 5) mes "^08088A~^000000You have 5 Magic Gold Coin.";
 	else { 
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Magic Gold Coin.^000000\n (You can trade 100m zeny for a gold coin using the Coin Exchange npc)";
 		set item_check,0;
@@ -332,10 +332,10 @@ L_Quest6:
 	}
 	if (countitem(4123)>=1)  mes "^08088A~^000000You have 1 Eddga Card.";
 	else { 
-		mes "^08088A~^000000^FF0000^FF0000You don't have enough Eddga Card^000000";
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Eddga Card.^000000";
 		set item_check,0;
 	}
-	if (countitem(30001) >= 5) mes "^08088A~^000000You have 5 Magic Gold Coin";
+	if (countitem(30001) >= 5) mes "^08088A~^000000You have 5 Magic Gold Coin.";
 	else { 
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Magic Gold Coin.^000000\n (You can trade 100m zeny for a gold coin using the Coin Exchange npc)";
 		set item_check,0;
