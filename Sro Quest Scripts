@@ -9,30 +9,29 @@
 //===== Description: =========================================
 //= Collection of quest scripts including iRO and custom gears
 //===== Revisions ============================================
-//= 1.0 Quest #1,#2
-//= 
+//= 1.0 Quest #1,#2,#3,#4,#5
 //===== Script Notes: ========================================
 //= Designed for ScytheRO (Private RO Server - By Zairik)
+//= FUTURE: Make 1 function and set variables depending on what quest they want
 //============================================================
 
-// 5300 Bullock Hat,5429 Bogy Hat,5748 Classic Hat,5816 Classic Hat (cowbow hat)),5417 Crown parrots,5455 Decorative Geographer,5496 Dice Hat, 5749/5760 Driver Band , 5595 Eye of Juno (strong item?)
-// 5437 Fairy Flower, 5210 Flapping Angel Wing, 5334 Flapping Angeling, 5785 Green Bunny Hairband, 5465 Celestial Hat (hat of fortune), 5481 Hermode Cap, 5423 I love china, 5658 Imp Hat
-// 5497 King Tiger Doll Hat, 5537 Kwati Hat, 5418 Legionnarie Hat, 5366 Love Dad Bandana, 
+// Possible Quest Headgears:
+// 5300 Bullock Hat,5429 Bogy Hat,5748 Classic Hat,5816 Classic Hat (cowbow hat)),5417 Crown parrots,5455 Decorative Geographer,5496 Dice Hat, 5749/5760 Driver Band ,
+// 5437 Fairy Flower, 5785 Green Bunny Hairband, 5465 Celestial Hat (hat of fortune), 5481 Hermode Cap, 5819 Carnival Circlet, 5425 Fanta Grape Can Hat
+// 5497 King Tiger Doll Hat, 5537 Kwati Hat, 5418 Legionnarie Hat, 5366 Love Dad Bandana, 5413 Chicken Hat, 5564 Crown of Deceit
 
+// Next Headgears for quests:
+// 5465,5497,5537,5496,5413,5564
 
-// 5334, 5423
+scythero,107,106,3	script	Quest Trader	657,{
 
-
-
-scythero,107,106,3	script	Quest Trader	100,{
-
-menu "Puppy Hat",L_Quest1,"Beer Hat",L_Quest2;
+menu "Puppy Hat",L_Quest1,"Beer Hat",L_Quest2,"Flapping Angel Wing",L_Quest3,"Flapping Angeling",L_Quest4,"I Love China Hat",L_Quest5;
 
 // Reward: Puppy Hat (5182)
 // Items: 10 Puppy Headband (5118) / 250 Matyr's Leash (2618) / 250 Singing Plant (707) / 3 Magic Gold Coin (30001)
 L_Quest1:
 	mes "[^FF0000Pet Lover^000000]";
-	mes "^08088APuppy Hat Requirements:^000000";
+	mes "^08088APuppy Hat (5182) Requirements:^000000";
 	mes "^FF000010^000000 Puppy Headband (5118)";
 	mes "^FF0000250^000000 Matyr's Leach (2618)";
 	mes "^FF0000250^000000 Singing Plant (707)";
@@ -41,7 +40,7 @@ L_Quest1:
 	set item_check,1;
 	mes "^08088APuppy Hat Progress:^000000";
 	if (countitem(5118)>=10) { 
-		mes "You have 10 Puppy Headbands.";
+		mes "^08088A~^000000You have 10 Puppy Headbands.";
 	}
 	else { 
 		mes "^08088A~^000000^FF0000You don't have enough Puppy Headband.^000000";
@@ -64,26 +63,37 @@ L_Quest1:
 	}
 	if (item_check == 0) end;
 	next;
-	delitem 5118,10;
-	delitem 2618,250;
-	delitem 707,250;
-	delitem 30001,3;
-	getitem 5182,1;
 	mes "[^FF0000Pet Lover^000000]";
-	mes "I managed to find a few puppies with the supplies you gave me. Please take one for your hard work and remember to take care of it!";
-	end;
-
+	mes "Would you like to recieve your reward now?";
+	switch(select("Yes:No")){
+		case 1:
+			next;
+			delitem 5118,10;
+			delitem 2618,250;
+			delitem 707,250;
+			delitem 30001,3;
+			getitem 5182,1;
+			mes "[^FF0000Pet Lover^000000]";
+			mes "I managed to find a few puppies with the supplies you gave me. Please take one for your hard work and remember to take care of it!";
+			end;
+		default:
+			end;
+	}
 
 // Reward: Beer Hat (5416)
 // Items: 300 Green Beer (12712), 50 Alcohol (970) *vend item* / 800 Ice Cubic (7066) / 15 Mug (7891) *no drop* / 5 Magic Gold Coin (30001)
-
-// 1396,CRYSTAL_2,Earth Crystal,Earth Crystal,1,15,0,0,0,0,0,0,100,99,1,1,1,1,999,1,0,0,0,0,20,0x161,190,0,0,0,0,0,0,0,0,0,0,539,3800,530,4500,561,5000,667,4900,5097,7000,531,6500,558,5000,608,250,0,0,0,0
-
 L_Quest2:
+	mes "[^FF0000Drunk Vender^000000]";
+	mes "^08088ABeer Hat (5416) Requirements:^000000";
+	mes "^FF0000300^000000 Green Beer (5118) - ma_fild01";
+	mes "^FF000050^000000 Alcohol (2618)";
+	mes "^FF0000800^000000 Ice Cubic (707)";
+	mes "^FF00005^000000 Magic Gold Coin";
+	next;
 	set item_check,1;
 	mes "^08088ABeer Hat Progress:^000000";
 	if (countitem(12712)>=300) { 
-		mes "You have 300 Green Beer.";
+		mes "^08088A~^000000You have 300 Green Beer.";
 	}
 	else { 
 		mes "^08088A~^000000^FF0000You don't have enough Green Beer.^000000";
@@ -106,42 +116,194 @@ L_Quest2:
 	}
 	if (item_check == 0) end;
 	next;
-	delitem 12712,300;
-	delitem 970,50;
-	delitem 7066,800;
-	delitem 30001,5;
-	getitem 5416,1;
 	mes "[^FF0000Drunk Vender^000000]";
-	mes "Oh yeah, now the party can begin. Join me by having this special Beer Hat!";
-	end;
-	
+	mes "Would you like to recieve your reward now?";
+	switch(select("Yes:No")){
+		case 1:
+			next;
+			delitem 12712,300;
+			delitem 970,50;
+			delitem 7066,800;
+			delitem 30001,5;
+			getitem 5416,1;
+			mes "[^FF0000Drunk Vender^000000]";
+			mes "Oh yeah, now the party can begin! Join me with this special Beer Hat!";
+			end;
+		default:
+			end;
+	}
 	
 L_Quest3:
 // Reward: Flapping Angel Wing (5210)
-// Items: 300 Soft Feather (7063), 1 Angel Wing (2254), 1 Angeling Card (4054), 5 Magic Gold Coin
-	
-	
-
+// Items: 400 Soft Feather (7063), 1 Angel Wing (2254), 1 Angeling Card (4054),6 Magic Gold Coin
+	mes "[^FF0000Flying Angel^000000]";
+	mes "^08088AFlapping Angel Wing (5210) Requirements:^000000";
+	mes "^FF0000400^000000 Soft Feather (7063)";
+	mes "^FF00001^000000 Angel Wing (2254)";
+	mes "^FF00001^000000 Angeling Card (4054)";
+	mes "^FF00006^000000 Magic Gold Coin";
+	next;
+	set item_check,1;
+	mes "^08088AFlapping Angel Wing Progress:^000000";
+	if (countitem(7063)>=400) { 
+		mes "^08088A~^000000You have 400 Soft Feather.";
+	}
+	else { 
+		mes "^08088A~^000000^FF0000You don't have enough Soft Feather.^000000";
+		set item_check,0;
+	}
+	if (countitem(2254)>=1)  mes "^08088A~^000000You have 1 Angel Wing.";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Angel Wing.^000000";
+		set item_check,0;
+		}
+	if (countitem(4054)>=1)  mes "^08088A~^000000You have 1 Angeling Card.";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Angeling Card.^000000";
+		set item_check,0;
+	}
+	if (countitem(30001) >= 6) mes "^08088A~^000000You have 6 Magic Gold Coin";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Magic Gold Coin.^000000\n (You can trade 100m zeny for a gold coin using the Coin Exchange npc)";
+		set item_check,0;
+	}
+	if (item_check == 0) end;
+	next;
+	mes "[^FF0000Flying Angel^000000]";
+	mes "Would you like to recieve your reward now?";
+	switch(select("Yes:No")){
+		case 1:
+			next;
+			delitem 7063,400;
+			delitem 2254,1;
+			delitem 4054,1;
+			delitem 30001,6;
+			getitem 5210,1;
+			mes "[^FF0000Flying Angel^000000]";
+			mes "Fly away into the sky~";
+			end;
+		default:
+			end;
+	}
 	
 L_Quest4:
 // Reward: Flapping Angeling(5334)
-// Items: 100 Soft Feather (7063), 1 Angeling Hat (5132), 1 Angeling Card, 1 Magic Gold Coin
-
-
-
-
+// Items: 200 Soft Feather (7063), 1 Angeling Hat (5132), 1 Angeling Card (4054), 3 Magic Gold Coin
+	mes "[^FF0000Happy Angeling^000000]";
+	mes "^08088AFlapping Angeling (5334) Requirements:^000000";
+	mes "^FF0000200^000000 Soft Feather (7063)";
+	mes "^FF00001^000000 Angeling Hat (5132)";
+	mes "^FF00001^000000 Angeling Card (4054)";
+	mes "^FF00003^000000 Magic Gold Coin";
+	next;
+	set item_check,1;
+	mes "^08088AFlapping Angeling Progress:^000000";
+	if (countitem(7063)>=200) { 
+		mes "^08088A~^000000You have 200 Soft Feather.";
+	}
+	else { 
+		mes "^08088A~^000000^FF0000You don't have enough Soft Feather.^000000";
+		set item_check,0;
+	}
+	if (countitem(5132)>=1)  mes "^08088A~^000000You have 1 Angeling Hat.";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Angel Wing.^000000";
+		set item_check,0;
+		}
+	if (countitem(4054)>=1)  mes "^08088A~^000000You have 1 Angeling Card.";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Angeling Card.^000000";
+		set item_check,0;
+	}
+	if (countitem(30001) >= 3) mes "^08088A~^000000You have 3 Magic Gold Coin";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Magic Gold Coin.^000000\n (You can trade 100m zeny for a gold coin using the Coin Exchange npc)";
+		set item_check,0;
+	}
+	if (item_check == 0) end;
+	next;
+	mes "[^FF0000Happy Angeling^000000]";
+	mes "Would you like to recieve your reward now?";
+	switch(select("Yes:No")){
+		case 1:
+			next;
+			delitem 7063,200;
+			delitem 5132,1;
+			delitem 4054,1;
+			delitem 30001,3;
+			getitem 5210,1;
+			mes "[^FF0000Happy Angeling^000000]";
+			mes "Fly away into the sky~";
+			end;
+		default:
+			end;
+	}
+	
 L_Quest5:
 // Reward: I love China(5423)
-// Items: 500 Heart of Mermaid (950), 200 Flame Heart, 100 China (736), 200 Wing of Dragonfly (7064), 5 Magic Gold Coin
-
-
-
-
+// Items: 300 Heart of Mermaid (950), 200 Flame Heart (994), 10 China (736) *vend item*, 200 Wing of Dragonfly (7064), 5 Magic Gold Coin
+	mes "[^FF0000Chinese Man^000000]";
+	mes "^08088AI Love China (5423) Requirements:^000000";
+	mes "^FF0000300^000000 Heart of Mermaid (950)";
+	mes "^FF0000200^000000 Flame Heart (994)";
+	mes "^FF000010^000000 China (736)";
+	mes "^FF0000200^000000 Wing of Dragonfly (7064)";
+	mes "^FF00005^000000 Magic Gold Coin";
+	next;
+	set item_check,1;
+	mes "^08088AI Love China Progress:^000000";
+	if (countitem(950)>=300) { 
+		mes "^08088A~^000000You have 300 Heart of Mermaid.";
+	}
+	else { 
+		mes "^08088A~^000000^FF0000You don't have enough Heart of Mermaid.^000000";
+		set item_check,0;
+	}
+	if (countitem(994)>=200)  mes "^08088A~^000000You have 200 Flame Heart.";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Flame Heart.^000000";
+		set item_check,0;
+		}
+	if (countitem(736)>=10)  mes "^08088A~^000000You have 10 China.";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough China.^000000";
+		set item_check,0;
+	}
+	if (countitem(7064)>=200)  mes "^08088A~^000000You have 200 Wing of Dragonfly.";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Wing of Dragonfly^000000";
+		set item_check,0;
+	}
+	if (countitem(30001) >= 5) mes "^08088A~^000000You have 5 Magic Gold Coin";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Magic Gold Coin.^000000\n (You can trade 100m zeny for a gold coin using the Coin Exchange npc)";
+		set item_check,0;
+	}
+	if (item_check == 0) end;
+	next;
+	mes "[^FF0000Chinese Man^000000]";
+	mes "Would you like to recieve your reward now?";
+	switch(select("Yes:No")){
+		case 1:
+			next;
+			delitem 950,300;
+			delitem 994,200;
+			delitem 736,10;
+			delitem 7064,200;
+			delitem 30001,5;
+			getitem 5423,1;
+			mes "[^FF0000Chinese Man^000000]";
+			mes "China! China! China!";
+			end;
+		default:
+			end;
+	}
 }
-
-
 
 // Quest #2 Mob
 // 1563,DRUNK_TENGU,Drunk Tengu,Drunk Tengu,99,500000,0,0,0,2,17000,19000,70,80,500,200,200,200,2000,500,10,12,2,6,42,0x3985,190,890,1920,672,0,0,0,0,0,0,0,12712,10,7891,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
 ma_fild02,0,0,0,0	monster	Drunk Tengu	1563,125,0,0,0
 
+
+// Possible Quest Mobs
+// 1396,CRYSTAL_2,Earth Crystal,Earth Crystal,1,15,0,0,0,0,0,0,100,99,1,1,1,1,999,1,0,0,0,0,20,0x161,190,0,0,0,0,0,0,0,0,0,0,539,3800,530,4500,561,5000,667,4900,5097,7000,531,6500,558,5000,608,250,0,0,0,0
