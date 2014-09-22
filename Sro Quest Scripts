@@ -18,10 +18,10 @@
 // Possible Quest Headgears:
 // 5300 Bullock Hat,5429 Bogy Hat,5748 Classic Hat,5816 Classic Hat (cowbow hat)),5417 Crown parrots,5455 Decorative Geographer,5496 Dice Hat, 5749/5760 Driver Band ,
 // 5437 Fairy Flower, 5785 Green Bunny Hairband, 5465 Celestial Hat (hat of fortune), 5481 Hermode Cap, 5819 Carnival Circlet, 5425 Fanta Grape Can Hat
-// 5497 King Tiger Doll Hat, 5537 Kwati Hat, 5418 Legionnarie Hat, 5366 Love Dad Bandana, 5413 Chicken Hat, 5564 Crown of Deceit
+// 5537 Kwati Hat, 5418 Legionnarie Hat, 5366 Love Dad Bandana, 5413 Chicken Hat, 5564 Crown of Deceit
 
 // Next Headgears for quests:
-// 5465,5497,5537,5496,5413,5564
+// 5465,5537,5496,5413,5564
 
 scythero,107,106,3	script	Quest Trader	657,{
 
@@ -30,14 +30,14 @@ L_Menu2:
 	menu "Eddga Doll",L_Quest6;
 
 // Reward: Puppy Hat (5182)
-// Items: 10 Puppy Headband (5118) / 250 Matyr's Leash (2618) / 250 Singing Plant (707) / 3 Magic Gold Coin (30001)
+// Items: 10 Puppy Headband (5118) / 5 Matyr's Leash (2618) / 250 Singing Plant (707) / 5 Magic Gold Coin (30001)
 L_Quest1:
 	mes "[^FF0000Pet Lover^000000]";
 	mes "^08088APuppy Hat (5182) Requirements:^000000";
 	mes "^FF000010^000000 Puppy Headband (5118)";
-	mes "^FF0000250^000000 Matyr's Leach (2618)";
+	mes "^FF00005^000000 Matyr's Leach (2618)";
 	mes "^FF0000250^000000 Singing Plant (707)";
-	mes "^FF00003^000000 Magic Gold Coin";
+	mes "^FF00005^000000 Magic Gold Coin";
 	next;
 	set item_check,1;
 	mes "^08088APuppy Hat Progress:^000000";
@@ -48,7 +48,7 @@ L_Quest1:
 		mes "^08088A~^000000^FF0000You don't have enough Puppy Headband.^000000";
 		set item_check,0;
 	}
-	if (countitem(2618)>=250)  mes "^08088A~^000000You have 250 Matyr's Leash.";
+	if (countitem(2618)>=5)  mes "^08088A~^000000You have 5 Matyr's Leash.";
 	else { 
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Matyr's Leash.^000000";
 		set item_check,0;
@@ -58,7 +58,7 @@ L_Quest1:
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Singing Plant.^000000";
 		set item_check,0;
 	}
-	if (countitem(30001) >= 3) mes "^08088A~^000000You have 3 Magic Gold Coin";
+	if (countitem(30001) >= 5) mes "^08088A~^000000You have 5 Magic Gold Coin";
 	else { 
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Magic Gold Coin.^000000\n (You can trade 100m zeny for a gold coin using the Coin Exchange npc)";
 		set item_check,0;
@@ -71,9 +71,9 @@ L_Quest1:
 		case 1:
 			next;
 			delitem 5118,10;
-			delitem 2618,250;
+			delitem 2618,5;
 			delitem 707,250;
-			delitem 30001,3;
+			delitem 30001,5;
 			getitem 5182,1;
 			mes "[^FF0000Pet Lover^000000]";
 			mes "I managed to find a few puppies with the supplies you gave me. Please take one for your hard work and remember to take care of it!";
@@ -83,13 +83,14 @@ L_Quest1:
 	}
 
 // Reward: Beer Hat (5416)
-// Items: 300 Green Beer (12712), 50 Alcohol (970) *vend item* / 800 Ice Cubic (7066) / 15 Mug (7891) *no drop* / 5 Magic Gold Coin (30001)
+// Items: 300 Green Beer (12712) *no drop*, 50 Alcohol (970) *vend item* / 800 Ice Cubic (7066) / 15 Mug (7891) *no drop* / 5 Magic Gold Coin (30001)
 L_Quest2:
 	mes "[^FF0000Drunk Vender^000000]";
 	mes "^08088ABeer Hat (5416) Requirements:^000000";
-	mes "^FF0000300^000000 Green Beer (5118) - ma_fild01";
-	mes "^FF000050^000000 Alcohol (2618)";
-	mes "^FF0000800^000000 Ice Cubic (707)";
+	mes "^FF0000300^000000 Green Beer (12712) - ma_fild01";
+	mes "^FF000050^000000 Alcohol (970)";
+	mes "^FF0000800^000000 Ice Cubic (7066)";
+	mes "^FF000015^000000 Mug (7891)";
 	mes "^FF00005^000000 Magic Gold Coin";
 	next;
 	set item_check,1;
@@ -111,6 +112,11 @@ L_Quest2:
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Ice Cubic.^000000";
 		set item_check,0;
 	}
+	if (countitem(7891)>=15)  mes "^08088A~^000000You have 15 Mug.";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Mug.^000000";
+		set item_check,0;
+	}
 	if (countitem(30001) >= 5) mes "^08088A~^000000You have 5 Magic Gold Coin";
 	else { 
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Magic Gold Coin.^000000\n (You can trade 100m zeny for a gold coin using the Coin Exchange npc)";
@@ -126,6 +132,7 @@ L_Quest2:
 			delitem 12712,300;
 			delitem 970,50;
 			delitem 7066,800;
+			delitem 7891,15;
 			delitem 30001,5;
 			getitem 5416,1;
 			mes "[^FF0000Drunk Vender^000000]";
@@ -209,7 +216,7 @@ L_Quest4:
 	}
 	if (countitem(5132)>=1)  mes "^08088A~^000000You have 1 Angeling Hat.";
 	else { 
-		mes "^08088A~^000000^FF0000^FF0000You don't have enough Angel Wing.^000000";
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Angeling Hat.^000000";
 		set item_check,0;
 		}
 	if (countitem(4054)>=1)  mes "^08088A~^000000You have 1 Angeling Card.";
@@ -233,7 +240,7 @@ L_Quest4:
 			delitem 5132,1;
 			delitem 4054,1;
 			delitem 30001,3;
-			getitem 5210,1;
+			getitem 5334,1;
 			mes "[^FF0000Happy Angeling^000000]";
 			mes "Fly away into the sky~";
 			end;
@@ -306,8 +313,8 @@ L_Quest6:
 // Items: 5 Tiger Skin (1029), 200 Tiger Panty (7267), 1 Eddga Card (4123), 5 Magic Gold Coin
 	mes "[^FF0000Tiger Merchant^000000]";
 	mes "^08088AEddga Hat (5497) Requirements:^000000";
-	mes "^FF00005^000000 Tiger Skin (950)";
-	mes "^FF0000200^000000 Tiger Panty (994)";
+	mes "^FF00005^000000 Tiger Skin (1029)";
+	mes "^FF0000200^000000 Tiger Panty (7267)";
 	mes "^FF00001^000000 Eddga Card (4123)";
 	mes "^FF00005^000000 Magic Gold Coin";
 	next;
@@ -352,10 +359,6 @@ L_Quest6:
 			end;
 	}
 }
-
-
-
-
 
 // Quest #2 Mob
 // 1563,DRUNK_TENGU,Drunk Tengu,Drunk Tengu,99,500000,0,0,0,2,17000,19000,70,80,500,200,200,200,2000,500,10,12,2,6,42,0x3985,190,890,1920,672,0,0,0,0,0,0,0,12712,10,7891,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
