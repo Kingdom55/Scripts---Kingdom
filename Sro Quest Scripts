@@ -30,14 +30,14 @@ L_Menu2:
 	menu "Eddga Doll",L_Quest6;
 
 // Reward: Puppy Hat (5182)
-// Items: 10 Puppy Headband (5118) / 5 Matyr's Leash (2618) / 250 Singing Plant (707) / 5 Magic Gold Coin (30001)
+// Items: 10 Puppy Headband (5118) / 5 Matyr's Leash (2618) / 250 Singing Plant (707) / 4 Magic Gold Coin (30001)
 L_Quest1:
 	mes "[^FF0000Pet Lover^000000]";
 	mes "^08088APuppy Hat (5182) Requirements:^000000";
 	mes "^FF000010^000000 Puppy Headband (5118)";
 	mes "^FF00005^000000 Matyr's Leach (2618)";
 	mes "^FF0000250^000000 Singing Plant (707)";
-	mes "^FF00005^000000 Magic Gold Coin";
+	mes "^FF00004^000000 Magic Gold Coin";
 	next;
 	set item_check,1;
 	mes "^08088APuppy Hat Progress:^000000";
@@ -58,7 +58,7 @@ L_Quest1:
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Singing Plant.^000000";
 		set item_check,0;
 	}
-	if (countitem(30001) >= 5) mes "^08088A~^000000You have 5 Magic Gold Coin";
+	if (countitem(30001) >= 4) mes "^08088A~^000000You have 4 Magic Gold Coin";
 	else { 
 		mes "^08088A~^000000^FF0000^FF0000You don't have enough Magic Gold Coin.^000000\n (You can trade 100m zeny for a gold coin using the Coin Exchange npc)";
 		set item_check,0;
@@ -73,7 +73,7 @@ L_Quest1:
 			delitem 5118,10;
 			delitem 2618,5;
 			delitem 707,250;
-			delitem 30001,5;
+			delitem 30001,4;
 			getitem 5182,1;
 			mes "[^FF0000Pet Lover^000000]";
 			mes "I managed to find a few puppies with the supplies you gave me. Please take one for your hard work and remember to take care of it!";
