@@ -9,7 +9,7 @@
 //===== Description: =========================================
 //= Collection of quest scripts including iRO and custom gears
 //===== Revisions ============================================
-//= 1.0 Quest #1,#2,#3,#4,#5
+//= 1.0 Quest #1,#2,#3,#4,#5,#6
 //===== Script Notes: ========================================
 //= Designed for ScytheRO (Private RO Server - By Zairik)
 //= FUTURE: Make 1 function and set variables depending on what quest they want
@@ -25,7 +25,9 @@
 
 scythero,107,106,3	script	Quest Trader	657,{
 
-menu "Puppy Hat",L_Quest1,"Beer Hat",L_Quest2,"Flapping Angel Wing",L_Quest3,"Flapping Angeling",L_Quest4,"I Love China Hat",L_Quest5;
+	menu "Puppy Hat",L_Quest1,"Beer Hat",L_Quest2,"Flapping Angel Wing",L_Quest3,"Flapping Angeling",L_Quest4,"I Love China Hat",L_Quest5,"next...",L_Menu2;
+L_Menu2:
+	menu "Eddga Doll",L_Quest6;
 
 // Reward: Puppy Hat (5182)
 // Items: 10 Puppy Headband (5118) / 250 Matyr's Leash (2618) / 250 Singing Plant (707) / 3 Magic Gold Coin (30001)
@@ -298,7 +300,62 @@ L_Quest5:
 		default:
 			end;
 	}
+	
+L_Quest6:
+// Reward:  Eddga Hat(5497)
+// Items: 5 Tiger Skin (1029), 200 Tiger Panty (7267), 1 Eddga Card (4123), 5 Magic Gold Coin
+	mes "[^FF0000Tiger Merchant^000000]";
+	mes "^08088AEddga Hat (5497) Requirements:^000000";
+	mes "^FF00005^000000 Tiger Skin (950)";
+	mes "^FF0000200^000000 Tiger Panty (994)";
+	mes "^FF00001^000000 Eddga Card (4123)";
+	mes "^FF00005^000000 Magic Gold Coin";
+	next;
+	set item_check,1;
+	mes "^08088AEddga Hat Progress:^000000";
+	if (countitem(1029)>=5)  mes "^08088A~^000000You have 5 Tiger Skin.";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Tiger Skin.^000000";
+		set item_check,0;
+		}
+	if (countitem(7267)>=200)  mes "^08088A~^000000You have 200 Tiger Panty.";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Tiger Panty.^000000";
+		set item_check,0;
+	}
+	if (countitem(4123)>=1)  mes "^08088A~^000000You have 1 Eddga Card.";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Eddga Card^000000";
+		set item_check,0;
+	}
+	if (countitem(30001) >= 5) mes "^08088A~^000000You have 5 Magic Gold Coin";
+	else { 
+		mes "^08088A~^000000^FF0000^FF0000You don't have enough Magic Gold Coin.^000000\n (You can trade 100m zeny for a gold coin using the Coin Exchange npc)";
+		set item_check,0;
+	}
+	if (item_check == 0) end;
+	next;
+	mes "[^FF0000Tiger Merchant^000000]";
+	mes "Would you like to recieve your reward now?";
+	switch(select("Yes:No")){
+		case 1:
+			next;
+			delitem 1029,5;
+			delitem 7267,200;
+			delitem 4123,1;
+			delitem 30001,5;
+			getitem 5497,1;
+			mes "[^FF0000Tiger Merchant^000000]";
+			mes "Now you can show those tigers who the real boss is!";
+			end;
+		default:
+			end;
+	}
 }
+
+
+
+
 
 // Quest #2 Mob
 // 1563,DRUNK_TENGU,Drunk Tengu,Drunk Tengu,99,500000,0,0,0,2,17000,19000,70,80,500,200,200,200,2000,500,10,12,2,6,42,0x3985,190,890,1920,672,0,0,0,0,0,0,0,12712,10,7891,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
